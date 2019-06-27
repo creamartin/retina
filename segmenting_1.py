@@ -9,19 +9,19 @@ import time
 from  skimage.filters import scharr
 
 #get path of an image.
-folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/'
-img = cv2.imread(folderPath + '437D6CD0.tif',0)
-resized = cv2.resize(img,(300,300))
+#folderPath = 'E:/User/Eigene Dateien/benis/Dokumente/TH Köln/6. Semester/BV 3/WPs/WP 5 research/segmentation/processing/Sobel_detector/Sobel-operator-Edge-Detection-master'
+img = cv2.imread('7437D6CD0.tif',0)
+#resized = cv2.resize(img, None, fx = 0.6, fy = 0.6, interpolation = cv2.INTER_CUBIC)
 
 #blur image
-gblur = cv2.GaussianBlur(resized,(5,5),3)
+gblur = cv2.GaussianBlur(img,(5,5),3)
 # get  vertical gradient image
 sobely = cv2.Sobel(gblur,cv2.CV_64F,0,1,ksize=5)
 #norm values between 0 and 1
 #sobely = scharr(resized)
-gradImg = (sobely - np.amin(sobely))/(np.amax(sobely)-np.amin(sobely))
+gradImg = 1.0-(sobely - np.amin(sobely))/(np.amax(sobely)-np.amin(sobely))
 # pad image with vertical column on both sides
-img2= cv2.copyMakeBorder(gradImg,0,0,1,1,cv2.BORDER_CONSTANT,value=0)
+img2= cv2.copyMakeBorder(gradImg,0,0,1,1,cv2.BORDER_CONSTANT,value=1E-5)
 
 height,width = img2.shape
 
