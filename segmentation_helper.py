@@ -103,13 +103,11 @@ def shiftColumn (shift_list, img):
 
     return img
 
-
 def signaltonoise(a, axis, ddof):
     a = np.asanyarray(a)
     m = a.mean(axis)
     sd = a.std(axis=axis, ddof=ddof)
     return np.where(sd == 0, 0, m / sd)
-
 
 # examples
 def exampleCrop():
@@ -124,7 +122,6 @@ def exampleCrop():
     plt.setp(plt.gca(), xticks=[], yticks=[])
     plt.show()
 
-
 def exampleFlatten():
     image_file = '../testvectors/sick.tif'
     im = io.imread(image_file, as_gray=True)
@@ -134,5 +131,3 @@ def exampleFlatten():
     plt.setp(plt.gca(), xticks=[], yticks=[])
     plt.show()
 
-
-exampleFlatten()
