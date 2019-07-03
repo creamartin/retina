@@ -31,57 +31,75 @@ def flatten(img):
 
     # denoise Gaussian
     gaussian = cv2.GaussianBlur(img, (5, 5), 0)
-    gaussian = cv2.medianBlur(img, 5, 0)
 
     # tentatively assign brightest pixel as RPE
     width, height = gaussian.shape
     indicesX = np.array([], dtype=np.int8)
     indicesY = np.array([], dtype=np.int8)
-
-    snrs = np.array([])
-
+    snrs = np.array([], dtype=np.float)
     for i in range(width):
         cur_col = np.array(gaussian[:, i])
         snr = signaltonoise(cur_col, axis=0, ddof=0)
-        # not sure about 0.7?
-        if snr > 0.7:
-            maxi = np.where(cur_col == np.amax(cur_col))[0][0]
-            indicesX = np.append(indicesX, i)
-            indicesY = np.append(indicesY, maxi)
-            snrs = np.append(snrs, snr)
-    # remove outliers greater 50pixels
-    median = np.mean(indicesY)
-    print(median)
-    newX = np.array([],dtype=np.int8)
-    newY = np.array([],dtype=np.int8)
+        maxi = np.where(cur_col == np.amax(cur_col))[0][0]
+        indicesX = np.append(indicesX, i)
+        indicesY = np.append(indicesY, maxi)
+        snrs = np.append(snrs, snr)
+
+    # remove columns that present a significantly lower signal-to-noise ratio
+    mean = np.mean(snrs)
+    # 5% less than average snr allowed
+    limit = mean - 0.05 * mean
+    remove = np.where(snrs < limit)[0]
+    indicesX = np.delete(indicesX, remove)
+    indicesY = np.delete(indicesY, remove)
+
+    # remove outliers greater 60pixels
+    median = np.median(indicesY)
+    newX = np.array([], dtype=np.int8)
+    newY = np.array([], dtype=np.int8)
     for i in range(len(indicesY)):
         el = indicesY[i]
         if el < median + 60 and el > median - 60:
-            newX = np.append(newX,indicesX[i])
-            newY = np.append(newY,el)
+            newX = np.append(newX, indicesX[i])
+            newY = np.append(newY, el)
     indicesX = newX
     indicesY = newY
-    # mean = np.mean(indices[:][0])
-    # print("mean: "+str(mean)+"\nmedian:"+str(median))
-    #indicesY = [el for el in indicesY if el < median + 25 or el > median - 25]
-
-    # remove columns that present a significantly lower signal-to-noise ratio
 
     # fit 2nd order polynomial to RPE Points
+    coeffs = np.polyfit(indicesX, indicesY, 3)
+    approximation = np.poly1d(coeffs)
+
     # shift each column up or down such that the RPE points lie on a flat line
-    backtorgb = cv2.cvtColor(gaussian, cv2.COLOR_GRAY2RGB).copy()
-    print(len(indicesX))
-    print(len(indicesY))
+    shiftList = np.array([], dtype=np.int8)
 
-    print(len(backtorgb))
+    for i in range(gaussian.shape[0]):
+        shiftList=np.append(shiftList,int(approximation(i)))
+    minShift = min(shiftList)
+    shiftList = [int(x-minShift) for x in shiftList]
+    print(shiftList)
+    return shift(shiftList,gaussian), shiftList
 
-    for i in range(len(indicesX)):
-        x = indicesX[i]
-        y = indicesY[i]
-        backtorgb[y, x] = (0, 0, 255)
+def shift(shift_list,img):
 
-    return backtorgb
+    # Patameter list
+    heigth,width = img.shape
+    shift_length = len(shift_list)
+    shift_max    = max(shift_list)
 
+    tmp_column = np.zeros((496,1),dtype=int)
+
+    for i in range(0,shift_length-1):
+        tmp_column = img[:,i]
+        shift = diff(shift_max,shift_list[i])
+
+        img[shift:heigth-1,i] = tmp_column[0:heigth-1-shift]
+        img[0:shift-1,i] = np.flip(tmp_column[0:shift-1])
+
+    return img
+
+
+def diff(coord1,coord2):
+    return int(abs(coord1-coord2))
 
 def signaltonoise(a, axis, ddof):
     a = np.asanyarray(a)
@@ -103,15 +121,14 @@ def exampleCrop():
     plt.setp(plt.gca(), xticks=[], yticks=[])
     plt.show()
 
-
 def exampleFlatten():
     image_file = '../testvectors/ref.tif'
     im = io.imread(image_file, as_gray=True)
     im = im.astype('float32')
-    flattened = flatten(im)
+    flattened,shiftlist = flatten(im)
     plt.gca().imshow(flattened)
-    #plt.figure()
-    #plt.gca().imshow(im, cmap='gray')
+    # plt.figure()
+    # plt.gca().imshow(im, cmap='gray')
     plt.setp(plt.gca(), xticks=[], yticks=[])
     plt.show()
 
