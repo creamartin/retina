@@ -25,15 +25,15 @@ def find_roi(img):
     crop = img[:last_white, :]
     return crop, first_white, last_white
 
-
+# flattened, unshiftList = flatten(img)
+# unflattened = shiftColumn(flattened, unshiftList)
 def flatten(img):
     img = img.astype('float32')
-
     # denoise Gaussian
     gaussian = cv2.GaussianBlur(img, (5, 5), 0)
 
     # tentatively assign brightest pixel as RPE
-    width, height = gaussian.shape
+    height, width = gaussian.shape
     indicesX = np.array([], dtype=np.int8)
     indicesY = np.array([], dtype=np.int8)
     snrs = np.array([], dtype=np.float)
@@ -69,37 +69,40 @@ def flatten(img):
     coeffs = np.polyfit(indicesX, indicesY, 3)
     approximation = np.poly1d(coeffs)
 
+    # #draw line
+    # backtorgb = cv2.cvtColor(gaussian, cv2.COLOR_GRAY2RGB)
+    # print(backtorgb.shape)
+    # for i in range(width):
+    #     backtorgb[int(approximation(i)), i] = (255, 0, 0)
+    #
+    # return backtorgb,[]
+
     # shift each column up or down such that the RPE points lie on a flat line
     shiftList = np.array([], dtype=np.int8)
 
-    for i in range(gaussian.shape[0]):
-        shiftList=np.append(shiftList,int(approximation(i)))
-    minShift = min(shiftList)
-    shiftList = [int(x-minShift) for x in shiftList]
+    for i in range(width):
+        shiftList = np.append(shiftList, int(approximation(i)))
+    maxShift = max(shiftList)
+    shiftList = [int(maxShift-x) for x in shiftList]
     print(shiftList)
-    return shift(shiftList,gaussian), shiftList
 
-def shift(shift_list,img):
+    return shiftColumn(shiftList, gaussian.copy()), [-x for x in shiftList]
 
-    # Patameter list
-    heigth,width = img.shape
-    shift_length = len(shift_list)
-    shift_max    = max(shift_list)
+def shiftColumn (shift_list, img):
+    height, width = img.shape
 
-    tmp_column = np.zeros((496,1),dtype=int)
-
-    for i in range(0,shift_length-1):
-        tmp_column = img[:,i]
-        shift = diff(shift_max,shift_list[i])
-
-        img[shift:heigth-1,i] = tmp_column[0:heigth-1-shift]
-        img[0:shift-1,i] = np.flip(tmp_column[0:shift-1])
+    for i in range(len(shift_list)):
+        tmp_column = img[:, i]
+        shift = int(shift_list[i])
+        if shift > 0:
+            img[shift:height - 1, i] = tmp_column[0:height - 1 - shift]
+            img[0:shift - 1, i] = np.flip(tmp_column[:shift - 1])
+        if shift < 0:
+            img[0:height - 1 + shift, i] = tmp_column[abs(shift):height - 1]
+            img[height -1 +shift:height-1, i] = np.flip(tmp_column[height -1 +shift:height-1])
 
     return img
 
-
-def diff(coord1,coord2):
-    return int(abs(coord1-coord2))
 
 def signaltonoise(a, axis, ddof):
     a = np.asanyarray(a)
@@ -121,14 +124,13 @@ def exampleCrop():
     plt.setp(plt.gca(), xticks=[], yticks=[])
     plt.show()
 
+
 def exampleFlatten():
-    image_file = '../testvectors/ref.tif'
+    image_file = '../testvectors/sick.tif'
     im = io.imread(image_file, as_gray=True)
     im = im.astype('float32')
-    flattened,shiftlist = flatten(im)
-    plt.gca().imshow(flattened)
-    # plt.figure()
-    # plt.gca().imshow(im, cmap='gray')
+    flattened, shiftlist = flatten(im)
+    plt.gca().imshow(flattened, cmap='gray')
     plt.setp(plt.gca(), xticks=[], yticks=[])
     plt.show()
 
