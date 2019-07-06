@@ -93,7 +93,7 @@ def find_path(img):
     print("Execution time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(
         int(elapsed_time % 60)) + " seconds")
 
-    return [to_coordinates(p) for p in path if p % width != 0 and p % width != width-1]
+    return [to_coordinates(p) for p in path if p % width != 0 and p % width != width - 1]
 
 
 # dark_to_bright, bright_to_dark = get_gradients(img,filter)
@@ -111,6 +111,31 @@ def get_gradients(img, filter):
         return (norm_Img + abs(norm_Img)) / 2, (norm_Img - abs(norm_Img)) / (-2)
 
 
+def which_layer(img, path):
+    # Gaussian
+    gaussian = cv2.GaussianBlur(img, (5, 5), 0.8)
+    # Otsu's thresholding
+    ret2, th2 = cv2.threshold(gaussian, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Normalized Image e
+    norm_th2 = th2 / 255
+
+    # Initialization
+    sum_pixel_values = 0
+    number_pixel = 0
+
+    # Iteration
+    for i in range(path):
+        sum_pixel_values = sum_pixel_values + np.sum(norm_th2[0:path[i] - 1, i])
+        number_pixel = number_pixel + path[i]
+
+    # Return condition
+    if (sum_pixel_values / number_pixel) >= 0.025:
+        return 'IS-OS'
+    else:
+        return 'Vitreous-NFL'
+
+
 ###############################PROGRAM###############################
 
 img = cv2.imread('../testvectors/sick/with druses/7CE97D80.tif', 0)
@@ -121,18 +146,23 @@ crop, first_white, last_white = segmentation_helper.find_roi(resized)
 padded = cv2.copyMakeBorder(crop, 0, 0, 1, 1, cv2.BORDER_CONSTANT, value=0)
 gblur = cv2.GaussianBlur(padded, (5, 5), 3)
 
-# find first layer
+# shared values
 gradient, gradient_negative = get_gradients(gblur, 'Scharr')
+height, width = gradient.shape
 
+# find first layer
 first_layer = find_path(gradient)
-print(crop.shape)
-#result =
+y_list = segmentation_helper.path_to_y_array(first_layer, width)
+#print(which_layer(crop, y_list))
+
+# find second layer
+
+path = np.zeros([crop.shape[0], crop.shape[1], 4], dtype=int)
 for p in first_layer:
     y = p[0]
     x = p[1]
-    print(p)
-    crop[y-1,(x-1)] = 1.
-    #cv2.
+    path[y - 1, (x - 1)] = (255, 0, 0, 255)
 
-plt.imshow(crop, cmap='gray',alpha=1)
+plt.imshow(crop, cmap='gray', alpha=1)
+plt.imshow(path, cmap='gray')
 plt.show()

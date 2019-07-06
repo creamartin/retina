@@ -5,6 +5,7 @@ import skimage.io as io
 from skimage.filters import threshold_otsu
 from scipy.signal import savgol_filter
 
+
 # cropped,top,bottom = find_roi(img)
 def find_roi(img):
     img = img.astype('float32')
@@ -258,6 +259,28 @@ def intensity_profiling(img, rpe_estimate):
     return img
 
 
+def path_to_y_array(paths, width):
+    paths = np.array(sorted(np.array(paths), key=lambda tup: tup[0]))
+
+    ys = paths[:,0]
+    return [ys[np.argmax(paths[:, 1] == i+1)] for i in range(width)]
+
+
+def mask_image(img, y_values, above=False):
+    img = img.copy()
+    height, width = img.shape
+    for i in range(width):
+        cur_col = img[:, i]
+        for j in range(height):
+            if above:
+                if cur_col[j] < [y_values[j]]:
+                    cur_col[j] = 0.
+            elif cur_col[j] > [y_values[j]]:
+                cur_col[j] = 0.
+        img[:, i] = cur_col
+        return img
+
+
 ################################ examples################################
 def exampleCrop():
     image_file = '../testvectors/sick.tif'
@@ -299,5 +322,4 @@ def exampleIntensityProfiling():
     plt.setp(ax, xticks=[], yticks=[])
     plt.show()
 
-
-#exampleIntensityProfiling()
+# exampleIntensityProfiling()
