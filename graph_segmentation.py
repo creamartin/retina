@@ -3,9 +3,9 @@ import cv2
 from scipy.sparse import dok_matrix
 from scipy.sparse.csgraph import dijkstra, shortest_path
 from matplotlib import pyplot as plt
-from skimage.filters import threshold_otsu
 import itertools
 import time
+from skimage.filters import threshold_otsu
 import segmentation_helper
 
 
@@ -99,21 +99,29 @@ def find_path(img):
 
 # dark_to_bright, bright_to_dark = get_gradients(img,filter)
 # filter: 'Scharr' or 'Sobel'
-
 def get_gradients(img, filter):
     if filter == 'Scharr':
         img = cv2.Scharr(img, cv2.CV_16S, 0, 1)
-        norm_Img = img * (1 / np.amax(img))
-        return (norm_Img + abs(norm_Img)) / 2, (norm_Img - abs(norm_Img)) / (-2)
+        norm_Img = (img - np.amin(img))/(np.amax(img)-np.amin(img))
+        return norm_Img, (1-norm_Img)
 
     if filter == 'Sobel':
         img = cv2.Sobel(img, cv2.CV_16S, 0, 1, ksize=5)
-        norm_Img = img * (1 / np.amax(img))
+        norm_Img = img * (1 / np.amax(abs(img)))
+        pos = (norm_Img + abs(norm_Img)) / 2
+        neg = (norm_Img - abs(norm_Img)) /(-2)
+        cv2.imshow("neg", neg)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         return (norm_Img + abs(norm_Img)) / 2, (norm_Img - abs(norm_Img)) / (-2)
 
+    if filter == 'Sobel2':
+        img = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=5)
+        norm_Img = (img - np.amin(img))/(np.amax(img)-np.amin(img))
+        return norm_Img, (1-norm_Img)
 
 def which_layer(img, path):
-    
+
 
     # Gaussian
     gaussian = cv2.GaussianBlur(img, (5, 5), 0.8)
@@ -131,7 +139,7 @@ def which_layer(img, path):
         sum_pixel_values = sum_pixel_values + np.sum(norm_binary_img[0:path[i] - 1, i])
         number_pixel = number_pixel + path[i]
 
-    print(sum_pixel_values / number_pixel) 
+    print(sum_pixel_values / number_pixel)
 
     # Return condition
     if (sum_pixel_values / number_pixel) >= 0.025:
@@ -142,34 +150,49 @@ def which_layer(img, path):
 
 ###############################PROGRAM###############################
 
-img = cv2.imread('7CE97D80.tif', 0)
+original = cv2.imread('../testvectors/sick/with druses/7F87A800.tif', 0)
 
 # pre-processing
-resized = cv2.resize(img, dsize=None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)  # why resize?
+resized = cv2.resize(original, dsize=None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)  # why resize?
 crop, first_white, last_white = segmentation_helper.find_roi(resized)
-padded = cv2.copyMakeBorder(crop, 0, 0, 1, 1, cv2.BORDER_CONSTANT, value=0)
-gblur = cv2.GaussianBlur(padded, (5, 5), 3)
+flattened, invert = segmentation_helper.flatten(crop)
+#padded = cv2.copyMakeBorder(flattened, 0, 0, 1, 1, cv2.BORDER_CONSTANT, value=0)
+gblur = cv2.GaussianBlur(flattened, (5, 5), 3)
 
 # shared values
 gradient, gradient_negative = get_gradients(gblur, 'Scharr')
 height, width = gradient.shape
+img = flattened
 
 # find first layer
 first_layer = find_path(gradient)
-y_list = segmentation_helper.path_to_y_array(first_layer, width)
+first_layer = segmentation_helper.path_to_y_array(first_layer, width)
 #print(which_layer(crop, y_list))
 
 # find second layer
-tes = which_layer(crop, y_list)
+masked = segmentation_helper.mask_image(gradient,first_layer,offset=20,above=True)
+second_layer = find_path(masked)
+second_layer = segmentation_helper.path_to_y_array(second_layer, width)
 
-path = np.zeros([crop.shape[0], crop.shape[1], 4], dtype=int)
-for p in first_layer:
-    y = p[0]
-    x = p[1]
-    path[y - 1, (x - 1)] = (255, 0, 0, 255)
+#second layer bottom boundary
+negmasked = segmentation_helper.mask_image(gradient_negative,first_layer,offset=20,above=True)
+bottom_boundary = find_path(negmasked)
+bottom_boundary = segmentation_helper.path_to_y_array(bottom_boundary, width)
 
+#unflatten all
+unflatten = segmentation_helper.shiftColumn(invert,img)
+first_layer = segmentation_helper.shiftColumn(invert,np.array(first_layer))
+second_layer = segmentation_helper.shiftColumn(invert,np.array(second_layer))
+bottom_boundary = segmentation_helper.shiftColumn(invert,np.array(bottom_boundary))
 
+#draw path
+paths = np.zeros([img.shape[0], img.shape[1], 4], dtype=int)
+
+for x in range(width):
+    paths[first_layer[x], x] = (255, 0, 0, 255)
+    paths[second_layer[x], x] = (0, 255, 0, 255)
+    paths[bottom_boundary[x], x] = (0, 0, 255, 255)
 
 plt.imshow(crop, cmap='gray', alpha=1)
-plt.imshow(path, cmap='gray')
+plt.imshow(paths, cmap='gray')
 plt.show()

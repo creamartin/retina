@@ -78,7 +78,6 @@ def flatten(img):
     nearest_neighbour_rpe = np.array([indicesY[find_nearest_return_index(indicesX, x)] for x in range(width)])
     nearest_neighbour_rpe = medfilt(nearest_neighbour_rpe, 3)
     nearest_neighbour_rpe = savgol_filter(nearest_neighbour_rpe, 51, 3)
-    print(nearest_neighbour_rpe)
 
     # shift each column up or down such that the RPE points lie on a flat line
     shiftList = np.array([], dtype=np.int8)
@@ -86,7 +85,7 @@ def flatten(img):
     for i in range(width):
         shiftList = np.append(shiftList, nearest_neighbour_rpe[i])
         # print rpe-line-estimate
-        img[int(nearest_neighbour_rpe[i]), i] = 1.
+        #img[int(nearest_neighbour_rpe[i]), i] = 1.
         # Todo is this okay?
         # col = img[:, i]
         # for y in range(height):
@@ -96,7 +95,7 @@ def flatten(img):
     maxShift = max(shiftList)
     shiftList = [int(maxShift - x) for x in shiftList]
     img = shiftColumn(shiftList, img)
-    return img, [-x for x in shiftList], nearest_neighbour_rpe
+    return img, [-x for x in shiftList]
 
 
 def shiftColumn(shift_list, img):
@@ -259,26 +258,30 @@ def intensity_profiling(img, rpe_estimate):
     return img
 
 
+# y x
 def path_to_y_array(paths, width):
     paths = np.array(sorted(np.array(paths), key=lambda tup: tup[0]))
 
-    ys = paths[:,0]
-    return [ys[np.argmax(paths[:, 1] == i+1)] for i in range(width)]
+    ys = paths[:, 0]
+    reduced = [paths[np.argmax(paths[:, 1] == i)] for i in range(width)]
+    reduced = np.array(sorted(np.array(reduced), key=lambda tup: tup[1]))
+    reduced = reduced[:, 0]
+    return reduced
 
 
-def mask_image(img, y_values, above=False):
-    img = img.copy()
+def mask_image(img, y_values, offset=0, above=False):
+    img = np.array(img.copy())
     height, width = img.shape
-    for i in range(width):
-        cur_col = img[:, i]
-        for j in range(height):
+
+    for x in range(width):
+        cur_col = img[:, x]
+        for y in range(height):
             if above:
-                if cur_col[j] < [y_values[j]]:
-                    cur_col[j] = 0.
-            elif cur_col[j] > [y_values[j]]:
-                cur_col[j] = 0.
-        img[:, i] = cur_col
-        return img
+                if y < y_values[x] + offset:
+                    cur_col[y] = 0.
+            elif y > y_values[x] + offset:
+                img[y, x] = 0.
+    return img
 
 
 ################################ examples################################
