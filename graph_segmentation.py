@@ -3,6 +3,7 @@ import cv2
 from scipy.sparse import dok_matrix
 from scipy.sparse.csgraph import dijkstra, shortest_path
 from matplotlib import pyplot as plt
+from skimage.filters import threshold_otsu
 import itertools
 import time
 import segmentation_helper
@@ -112,22 +113,25 @@ def get_gradients(img, filter):
 
 
 def which_layer(img, path):
+    
+
     # Gaussian
     gaussian = cv2.GaussianBlur(img, (5, 5), 0.8)
-    # Otsu's thresholding
-    ret2, th2 = cv2.threshold(gaussian, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    # Normalized Image e
-    norm_th2 = th2 / 255
+    # Otsu's thresholding
+    thrsh = threshold_otsu(gaussian)
+    norm_binary_img = (gaussian > thrsh).astype(int)
 
     # Initialization
     sum_pixel_values = 0
     number_pixel = 0
 
     # Iteration
-    for i in range(path):
-        sum_pixel_values = sum_pixel_values + np.sum(norm_th2[0:path[i] - 1, i])
+    for i in range(1,len(path)-2):
+        sum_pixel_values = sum_pixel_values + np.sum(norm_binary_img[0:path[i] - 1, i])
         number_pixel = number_pixel + path[i]
+
+    print(sum_pixel_values / number_pixel) 
 
     # Return condition
     if (sum_pixel_values / number_pixel) >= 0.025:
@@ -138,7 +142,7 @@ def which_layer(img, path):
 
 ###############################PROGRAM###############################
 
-img = cv2.imread('../testvectors/sick/with druses/7CE97D80.tif', 0)
+img = cv2.imread('7CE97D80.tif', 0)
 
 # pre-processing
 resized = cv2.resize(img, dsize=None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)  # why resize?
@@ -156,12 +160,15 @@ y_list = segmentation_helper.path_to_y_array(first_layer, width)
 #print(which_layer(crop, y_list))
 
 # find second layer
+tes = which_layer(crop, y_list)
 
 path = np.zeros([crop.shape[0], crop.shape[1], 4], dtype=int)
 for p in first_layer:
     y = p[0]
     x = p[1]
     path[y - 1, (x - 1)] = (255, 0, 0, 255)
+
+
 
 plt.imshow(crop, cmap='gray', alpha=1)
 plt.imshow(path, cmap='gray')
