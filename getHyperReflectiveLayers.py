@@ -5,7 +5,11 @@ from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import dijkstra
 from matplotlib import pyplot as plt
 import time
+<<<<<<< HEAD
 from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path,get_path, sub2ind,ind2sub, plot_layers
+=======
+from segmenting_30_07 import get_adjacency_matrix, sparse_matrix, find_shortest_path,get_path, sub2ind,ind2sub, plot_layers
+>>>>>>> segmentation
 
 class Path(object):
 
@@ -15,7 +19,11 @@ class Path(object):
         self.path = path
         self.pathX = pathX
         self.pathY = pathY
+<<<<<<< HEAD
         self.pathXmean = np.mean(self.pathX)
+=======
+        self.pathXmean = np.mean(self.path)
+>>>>>>> segmentation
 
     def getName(self):
         return self.name
@@ -62,6 +70,7 @@ def get_path1(Pr,  j):
         k = Pr[k]
     return path
 
+<<<<<<< HEAD
 def getHyperReflectiveLayers(inputImg, param):
 
     #initiate parameters
@@ -74,6 +83,13 @@ def getHyperReflectiveLayers(inputImg, param):
     else: offsets = np.arange(-20,21)
 
     #offsets = np.arange(-20,21)
+=======
+def getHyperReflectiveLayers(inputImg):
+
+    #initiate parameters
+    shrinkScale = 0.2
+    offsets = np.arange(-20,21)
+>>>>>>> segmentation
     isPlot = 0
 
     #shrink the image.
@@ -156,6 +172,7 @@ def getHyperReflectiveLayers(inputImg, param):
         # pathYArr = pathYArr(pathYArr > 0 & pathYArr <= szImgNew(2));
 
         pathArr = sub2ind(szImgNew,pathXArr,pathYArr)
+<<<<<<< HEAD
         # cv2.imshow("roi", roiImg)
         # cv2.waitKey(0)
         # cv2.destroyAllWindows()
@@ -163,6 +180,15 @@ def getHyperReflectiveLayers(inputImg, param):
         # cv2.imshow("roi", roiImg)
         # cv2.waitKey(0)
         # cv2.destroyAllWindows()
+=======
+        cv2.imshow("roi", roiImg)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        roiImg[pathXArr,pathYArr] = 0
+        cv2.imshow("roi", roiImg)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+>>>>>>> segmentation
         # pathArr = sub2ind(szImgNew,pathXArr,pathYArr);
         # roiImg(pathArr) = 0;
 
@@ -170,7 +196,10 @@ def getHyperReflectiveLayers(inputImg, param):
         plot_layers(gy, [pathArr])
 
         paths[count] =  Path("", path, pathX, pathY)
+<<<<<<< HEAD
         #paths = np.append(paths,Path("", path, pathX, pathY))
+=======
+>>>>>>> segmentation
 
 
         count+=1
@@ -187,6 +216,7 @@ def getHyperReflectiveLayers(inputImg, param):
         #for i in range(paths.size):
         #path, pathY, pathX = resizePath(szImg, szImgNew, constants, pathY, pathX);    
 
+<<<<<<< HEAD
     
     if paths[0].getPathXmean() > paths[1].getPathXmean():
         paths[0].name = 'isos'
@@ -194,6 +224,9 @@ def getHyperReflectiveLayers(inputImg, param):
     else:
         paths[0].name = 'ilm'
         paths[1].name = 'isos'
+=======
+
+>>>>>>> segmentation
 
     return paths
 
@@ -209,4 +242,8 @@ folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Sem
 name = 'exampleOCTimage0001.tif'
 
 myimg = cv2.imread(folderPath + name, 0)
+<<<<<<< HEAD
 # mypaths = getHyperReflectiveLayers(myimg)
+=======
+mypaths = getHyperReflectiveLayers(myimg)
+>>>>>>> segmentation
