@@ -19,46 +19,51 @@ import time
 import segmentation_helper
 from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path,get_path, sub2ind,ind2sub, plot_layers
 from getRetinalLayersCore import get_retinal_layers_core
-class Params:
+
+
+class Params(object):
+
     def __init__(self):
-        self.is_resize = []
-        self.filter_0_params = []
-        self.ilm_0 = []
-        self.ilm_1 = []
-        self.is_os_0 = []
-        self.is_os_1 = []
-        self.rpe_0 = []
-        self.rpe_1 = []
-        self.inl_opl_0 = []
-        self.inl_opl_1 = []
-        self.nfl_gcl_0 = []
-        self.nfl_gcl_1 = []
-        self.ipl_inl_0 = []
-        self.ipl_inl_1 = []
-        self.opl_onl_0 = []
-        self.opl_onl_1 = []
+        self.is_resize = 1.0
+        self.filter_0_params = np.array([5,5,1])
+        self.filter_params = np.array([20,20,2])
+        self.ilm_0 = 4
+        self.ilm_1 = 4
+        self.is_os_0 = 4
+        self.is_os_1 = 4
+        self.rpe_0 = 0.05
+        self.rpe_1 = 0.05
+        self.inl_opl_0 = 0.1 
+        self.inl_opl_1 = 0.3
+        self.nfl_gcl_0 = 0.05
+        self.nfl_gcl_1 = 0.3
+        self.ipl_inl_0 = 0.6
+        self.ipl_inl_1 = 0.2
+        self.opl_onl_0 = 0.05
+        self.opl_onl_1 = 0.5
 
         # adjacency matrices parameter
-        self.adj_matrix_w = []
-        self.adj_matrix_m_w = []
-        self.adj_m_a = []
-        self.adj_m_b = []
-        self.adj_M_w = []
-        self.adj_M_m_w = []
+        self.adjMatrixW = []
+        self.adjMatrixMW = []
+        self.adjMAsub = []
+        self.adjMBsub = []
+        self.adjMW = []
+        self.adjMmW = []
 
         # inner class rough_ilm_and_isos
         self.rough_ilm_and_isos = self.Rough_ilm_and_isos()
 
 
-    class Rough_ilm_and_isos:
+    class Rough_ilm_and_isos(object):
         
 
-        def __init__(self,):
-            self.shrink_scale = []
-            self.offsets = []
+        def __init__(self):
+            self.shrink_scale = 0.2
+            self.offsets = np.arange(-20:21)
 
 
 
+params = Params()
 
 
 
@@ -80,13 +85,14 @@ def get_retinal_layers(img):
     img = cv2.medianBlur(img,[3,3])
 
     # Create adjacency matrices 
-    adjMatrixW, adjMatrixMW, adjMAsub, adjMBsub, adjMW, adjMmW, img_new = get_adjacency_matrix(img)
+    params.adjMatrixW, params.adjMatrixMW, params.adjMAsub, params.adjMBsub, params.adjMW, params.adjMmW, img_new 
+    = get_adjacency_matrix(img)
 
     # Pre-set order 
     retinal_layer_segmentation_order = ['rough_ILM_and_ISOS', 'ilm', 'isos', 'rpe', 'inlopl', 'nflgcl', 'iplinl', 'oplonl']
 
     # Iterate through the list and save the found layer boundaries
-    retinal_layers =[]
+    retinal_layers = []
     for layer in  retinal_layer_segmentation_order:
         retinal_layers = get_retinal_layers_core(layer,img_new,params,retinal_layers)
 

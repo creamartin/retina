@@ -6,6 +6,9 @@ from matplotlib import pyplot as plt
 import itertools
 import time
 import segmentation_helper
+from getAdjacencyMatrix import get_adjacency_matrix , sparse_matrix, find_shortest_path,get_path, sub2ind,ind2sub, plot_layers
+import getHyperReflectiveLayers as hrl
+
 
 # This function is used in get_retinal_layers
 
@@ -15,7 +18,7 @@ def get_retinal_layers_core(layer_name, img, params,paths_list):
     if layer_name ==  'roughILMandISOS':
 
         img_old    = img[:,1:img.shape[1]-2]
-        temp_paths = get_hyper_reflective_layers(imgOld,params.rough_ILM_and_ISOS) # Get the rough segmentation of the first prominate layers ILM and ISOS
+        temp_paths = hrl.getHyperReflectiveLayers(img_old,params.rough_ILM_and_ISOS) # Get the rough segmentation of the first prominate layers ILM and ISOS
         paths_list = None
         
         return temp_paths
@@ -23,10 +26,11 @@ def get_retinal_layers_core(layer_name, img, params,paths_list):
 
     elif layer_name in ['nflgcl' 'inlopl' 'ilm' 'isos' 'oplonl' 'iplinl' 'rpe']:
         
-        adj_ma  = params.adj_m_a
-        adj_mb  = params.adj_m_b
-        adj_MW  = params.adj_M_w
-        adj_MmW = params.adj_M_m_w
+        adj_ma  = params.adjMAsub
+        adj_mb  = params.adjMBsub
+        adj_MW  = params.adjMW 
+        adj_MmW = params.adjMmW 
+
 
     
     # init region of interest
@@ -131,22 +135,55 @@ def get_retinal_layers_core(layer_name, img, params,paths_list):
 
         # set column_wise region of interest to 1 
         roi_img[start_ind : end_ind,k] = 1
-        roi_img[:,0] = 1
-        roi_img[:,sz_img(1)-1] = 1
 
-        # include only the region of interest in the adjacency matrix
-        include_a = np.in1d(adj_ma,np.where(roi_img == 1))
-        include_b = np.in1d(adj_mb,np.where(roi_img == 1))
+
+    # set first and last column to 1    
+    roi_img[:,0] = 1
+    roi_img[:,sz_img(1)-1] = 1
+
+    # include only the region of interest in the adjacency matrix
+    include_a = np.in1d(adj_ma,np.where(roi_img == 1))
+    include_b = np.in1d(adj_mb,np.where(roi_img == 1))
         
-        keep_ind = np.logical_and(include_a,include_b)
+    keep_ind = np.logical_and(include_a,include_b)           
 
 
-        # Black to white or white to black adjacency
+    # Black to white or white to black adjacency
 
-        if ['rpe' 'nflgcl' 'oplonl' 'iplinl' ]:
+    # white to dark
+    if ['rpe' 'nflgcl' 'oplonl' 'iplinl' ]:
+
+        adjMatrixW = sparse_matrix(adj_MW(keep_ind),adj_ma(keep_ind),adj_mb(keep_ind),img)
+        dist_matrix , predecessors = find_shortest_path(adjMatrixW)
+        path = get_path(predecessors, len(dist_matrix) -1)
+    
+    # dark to white 
+    elif ['inlopl' 'ilm' 'isos']:
+
+        adjMatrixMW = sparse_matrix(adj_MmW(keep_ind),adj_ma(keep_ind),adj_mb(keep_ind),img)
+        dist_matrix , predecessors = find_shortest_path(adjMatrixMW)
+        path = get_path(predecessors, len(dist_matrix) -1)
+
+    # get pathX and pathY
+    pathX, pathY = ind2sub(sz_img,path)
 
 
-        elif: ['inlopl' 'ilm' 'isos' ]:
+    ########### Here we are !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    temp = 0
+    for layer in range(len(paths_list)-1):
+         if paths_list[layer] == layer_name:
+            temp = layer
+
+            
+
+
+
+
+
+ 
+
+
+    # elif: ['inlopl' 'ilm' 'isos' ]:
 
             
 
