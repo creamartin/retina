@@ -108,11 +108,6 @@ def get_gradients(img, filter):
     if filter == 'Sobel':
         img = cv2.Sobel(img, cv2.CV_16S, 0, 1, ksize=5)
         norm_Img = img * (1 / np.amax(abs(img)))
-        pos = (norm_Img + abs(norm_Img)) / 2
-        neg = (norm_Img - abs(norm_Img)) /(-2)
-        cv2.imshow("neg", neg)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
         return (norm_Img + abs(norm_Img)) / 2, (norm_Img - abs(norm_Img)) / (-2)
 
     if filter == 'Sobel2':
@@ -150,7 +145,10 @@ def which_layer(img, path):
 
 ###############################PROGRAM###############################
 
-original = cv2.imread('../testvectors/sick/with druses/7F87A800.tif', 0)
+#original = cv2.imread('../testvectors/sick/with druses/7F87A800.tif', 0)
+path = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/sick/with_druses/'
+name = '7CE97D80.tif'
+original = cv2.imread(path + name, 0)
 
 # pre-processing
 resized = cv2.resize(original, dsize=None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)  # why resize?
