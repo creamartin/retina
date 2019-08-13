@@ -69,7 +69,7 @@ def getHyperReflectiveLayers(inputImg, param):
         shrinkScale = param.shrink_scale
     else: shrinkScale = 0.2
 
-    if  param.offsets:
+    if  param.offsets.all():
         offsets = param.offsets
     else: offsets = np.arange(-20,21)
 
