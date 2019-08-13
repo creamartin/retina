@@ -169,24 +169,24 @@ name = '437D6CD0.tif'
 
 # # start log time
 # start_time = time.time()
-# #####################################
+# # #####################################
 # adjMatrixW, adjMatrixMW, adjMAsub, adjMBsub, adjMW, adjMmW, newImg = get_adjacency_matrix(gblur)
 # adjMatrixW = sparse_matrix (adjMW[:], adjMAsub[:], adjMBsub[:], newImg)
 # adjMatrixМmW = sparse_matrix (adjMmW[:], adjMAsub[:], adjMBsub[:], newImg)
 
-dist_matrix, predecessors = find_shortest_path(adjMatrixW)
-dist_matrix2, predecessors2 = find_shortest_path(adjMatrixМmW)
+# dist_matrix, predecessors = find_shortest_path(adjMatrixW)
+# dist_matrix2, predecessors2 = find_shortest_path(adjMatrixМmW)
 
-# list with all nodes between start and end point
-path = get_path(predecessors, len(dist_matrix)-1)
-path2 = get_path(predecessors2, len(dist_matrix2)-1)
+# # list with all nodes between start and end point
+# path = get_path(predecessors, len(dist_matrix)-1)
+# path2 = get_path(predecessors2, len(dist_matrix2)-1)
 
-# #############################################
-# #log time
-# elapsed_time = time.time() - start_time
-# print("Execution time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(
-#     int(elapsed_time % 60)) + " seconds")
-# print(elapsed_time)
+# # #############################################
+# # #log time
+# # elapsed_time = time.time() - start_time
+# # print("Execution time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(
+# #     int(elapsed_time % 60)) + " seconds")
+# # print(elapsed_time)
 
-# #paths = [path, path2]
-# plot_layers(newImg, [path, path2])
+# # #paths = [path, path2]
+# # plot_layers(newImg, [path, path2])

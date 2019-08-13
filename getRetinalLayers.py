@@ -17,10 +17,10 @@ from matplotlib import pyplot as plt
 import itertools
 import time
 import segmentation_helper
-from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path,get_path, sub2ind,ind2sub, plot_layers
+from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path, get_path, sub2ind,ind2sub, plot_layers
 from getRetinalLayersCore import get_retinal_layers_core
 import skimage.io as io
-
+from segmentation_helper import flatten
 
 class Params(object):
 
@@ -28,8 +28,8 @@ class Params(object):
         self.is_resize = 1.0
         self.filter_0_params = np.array([5,5,1])
         self.filter_params = np.array([20,20,2])
-        self.ilm_0 = 4
-        self.ilm_1 = 4
+        self.ilm_0 = 2
+        self.ilm_1 = 2
         self.is_os_0 = 4
         self.is_os_1 = 4
         self.rpe_0 = 0.05
@@ -59,8 +59,8 @@ class Params(object):
         
 
         def __init__(self):
-            self.shrink_scale = 0.2
-            self.offsets = np.arange(-20,21)
+            self.shrink_scale = 1.0
+            self.offsets = np.arange(-10,11)
 
 
 
@@ -74,7 +74,7 @@ def get_retinal_layers(img):
     sz_img = img.shape
 
     # resize Image
-    img = cv2.resize(img, dsize=None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+    img = cv2.resize(img, dsize=None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
 
     # smooth image 
     # 2 approaches:
@@ -103,7 +103,7 @@ def get_retinal_layers(img):
 
 ##################### Example Code #########################
 
-img = cv2.imread('38B062A0.tif', 0)
+img = cv2.imread('61D70FB0.tif', 0)
 imglayers = get_retinal_layers(img)
 
 

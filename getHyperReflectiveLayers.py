@@ -158,13 +158,13 @@ def getHyperReflectiveLayers(inputImg, param):
 
 
 # get path of an image.
-folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/'
-#folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/sick/with_druses/'
-#folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/healthy/normal/'
-#name = '38B062A0.tif'
-name = '437D6CD0.tif'
-#name = 'exampleOCTimage0001.tif'
+# folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/'
+# #folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/sick/with_druses/'
+# #folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/healthy/normal/'
+# #name = '38B062A0.tif'
+# name = '437D6CD0.tif'
+# #name = 'exampleOCTimage0001.tif'
 
-param = Rough_ilm_and_isos()
-myimg = cv2.imread(folderPath + name, 0)
-mypaths = getHyperReflectiveLayers(myimg,param)
+# param = Rough_ilm_and_isos()
+# myimg = cv2.imread(folderPath + name, 0)
+# mypaths = getHyperReflectiveLayers(myimg,param)
