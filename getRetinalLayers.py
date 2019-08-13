@@ -19,6 +19,7 @@ import time
 import segmentation_helper
 from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path,get_path, sub2ind,ind2sub, plot_layers
 from getRetinalLayersCore import get_retinal_layers_core
+import skimage.io as io
 
 
 class Params(object):
@@ -59,7 +60,7 @@ class Params(object):
 
         def __init__(self):
             self.shrink_scale = 0.2
-            self.offsets = np.arange(-20:21)
+            self.offsets = np.arange(-20,21)
 
 
 
@@ -70,7 +71,7 @@ params = Params()
 def get_retinal_layers(img):
 
     # get Image size
-    sz_img = img.shape()
+    sz_img = img.shape
 
     # resize Image
     img = cv2.resize(img, dsize=None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
@@ -82,14 +83,13 @@ def get_retinal_layers(img):
     #img = cv2.GaussianBlur(img,[3,3],1,0)
 
     ## Median
-    img = cv2.medianBlur(img,[3,3])
+    img = cv2.medianBlur(img,3)
 
     # Create adjacency matrices 
-    params.adjMatrixW, params.adjMatrixMW, params.adjMAsub, params.adjMBsub, params.adjMW, params.adjMmW, img_new 
-    = get_adjacency_matrix(img)
+    params.adjMatrixW, params.adjMatrixMW, params.adjMAsub, params.adjMBsub, params.adjMW, params.adjMmW, img_new = get_adjacency_matrix(img)
 
     # Pre-set order 
-    retinal_layer_segmentation_order = ['rough_ILM_and_ISOS', 'ilm', 'isos', 'rpe', 'inlopl', 'nflgcl', 'iplinl', 'oplonl']
+    retinal_layer_segmentation_order = ['roughILMandISOS', 'ilm', 'isos', 'rpe', 'inlopl', 'nflgcl', 'iplinl', 'oplonl']
 
     # Iterate through the list and save the found layer boundaries
     retinal_layers = []
@@ -97,7 +97,15 @@ def get_retinal_layers(img):
         retinal_layers = get_retinal_layers_core(layer,img_new,params,retinal_layers)
 
 
-    # test 
+    return retinal_layers
+
+
+
+##################### Example Code #########################
+
+img = cv2.imread('38B062A0.tif', 0)
+imglayers = get_retinal_layers(img)
+
 
 
 

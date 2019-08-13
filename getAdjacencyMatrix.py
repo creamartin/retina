@@ -153,27 +153,26 @@ def plot_layers(img, paths):
 
 
 # get path of an image.
-folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/'
+#folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/'
 #folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/sick/with_druses/'
 #folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/healthy/normal/'
 #name = '38B062A0.tif'
 name = '437D6CD0.tif'
 
-myimg = cv2.imread(folderPath + name, 0)
-resized = cv2.resize(myimg, dsize=None, fx=0.5, fy=0.5,
-                    interpolation=cv2.INTER_AREA)
+# #myimg = cv2.imread(folderPath + name, 0)
+# resized = cv2.resize(img, dsize=None, fx=0.5, fy=0.5,interpolation=cv2.INTER_AREA)
 
-# blur image
-#gblur = cv2.GaussianBlur(padded,(5,5),3)
-#gblur = cv2.bilateralFilter(padded,5,25,25)
-gblur = cv2.medianBlur(resized, 5)
+# # blur image
+# #gblur = cv2.GaussianBlur(padded,(5,5),3)
+# #gblur = cv2.bilateralFilter(padded,5,25,25)
+# gblur = cv2.medianBlur(resized, 5)
 
-# start log time
-start_time = time.time()
-#####################################
-adjMatrixW, adjMatrixMW, adjMAsub, adjMBsub, adjMW, adjMmW, newImg = get_adjacency_matrix(gblur)
-adjMatrixW = sparse_matrix (adjMW[:], adjMAsub[:], adjMBsub[:], newImg)
-adjMatrixМmW = sparse_matrix (adjMmW[:], adjMAsub[:], adjMBsub[:], newImg)
+# # start log time
+# start_time = time.time()
+# #####################################
+# adjMatrixW, adjMatrixMW, adjMAsub, adjMBsub, adjMW, adjMmW, newImg = get_adjacency_matrix(gblur)
+# adjMatrixW = sparse_matrix (adjMW[:], adjMAsub[:], adjMBsub[:], newImg)
+# adjMatrixМmW = sparse_matrix (adjMmW[:], adjMAsub[:], adjMBsub[:], newImg)
 
 dist_matrix, predecessors = find_shortest_path(adjMatrixW)
 dist_matrix2, predecessors2 = find_shortest_path(adjMatrixМmW)
@@ -182,12 +181,12 @@ dist_matrix2, predecessors2 = find_shortest_path(adjMatrixМmW)
 path = get_path(predecessors, len(dist_matrix)-1)
 path2 = get_path(predecessors2, len(dist_matrix2)-1)
 
-#############################################
-#log time
-elapsed_time = time.time() - start_time
-print("Execution time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(
-    int(elapsed_time % 60)) + " seconds")
-print(elapsed_time)
+# #############################################
+# #log time
+# elapsed_time = time.time() - start_time
+# print("Execution time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(
+#     int(elapsed_time % 60)) + " seconds")
+# print(elapsed_time)
 
-#paths = [path, path2]
-plot_layers(newImg, [path, path2])
+# #paths = [path, path2]
+# plot_layers(newImg, [path, path2])
