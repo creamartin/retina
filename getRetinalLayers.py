@@ -6,7 +6,7 @@
 # IPL/INL
 # INL/OPL
 # OPL/ONL
-# IS/OS
+# IS/OS 
 # RPE
 
 import numpy as np
@@ -60,7 +60,7 @@ class Params(object):
 
         def __init__(self):
             self.shrink_scale = 1.0
-            self.offsets = np.arange(-10,11)
+            self.offsets = np.arange(-5,6)
 
 
 
@@ -74,13 +74,13 @@ def get_retinal_layers(img):
     sz_img = img.shape
 
     # resize Image
-    img = cv2.resize(img, dsize=None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
+    #img = cv2.resize(img, dsize=None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
 
     # smooth image 
     # 2 approaches:
 
     ## Gaussian Blur
-    #img = cv2.GaussianBlur(img,[3,3],1,0)
+    #img = cv2.GaussianBlur(img,(3,3),0.8,0)
 
     ## Median
     img = cv2.medianBlur(img,3)
@@ -92,19 +92,22 @@ def get_retinal_layers(img):
     retinal_layer_segmentation_order = ['roughILMandISOS', 'ilm', 'isos', 'rpe', 'inlopl', 'nflgcl', 'iplinl', 'oplonl']
 
     # Iterate through the list and save the found layer boundaries
-    retinal_layers = []
+    retinal_layers = []#np.empty(7,dtype = object)
     for layer in  retinal_layer_segmentation_order:
         retinal_layers = get_retinal_layers_core(layer,img_new,params,retinal_layers)
 
 
-    return retinal_layers
+    
+    return retinal_layers, img_new
 
 
 
 ##################### Example Code #########################
 
-img = cv2.imread('61D70FB0.tif', 0)
-imglayers = get_retinal_layers(img)
+img = cv2.imread('7F87A800.tif', 0)
+imglayers, img_new = get_retinal_layers(img)
+plot_layers(img_new, imglayers)
+
 
 
 

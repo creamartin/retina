@@ -129,15 +129,18 @@ def get_path(Pr,  j):
 def plot_layers(img, paths):
 
     layers = np.zeros([img.shape[0], img.shape[1], 4], dtype=np.uint8)
-    colors =  [[255, 0, 0, 255],  [0, 255, 0, 255], [0, 0, 255, 255]]
+    colors =  [[255, 0, 0, 255],  [0, 255, 0, 255],
+     [0, 0, 255, 255], [255, 255, 0, 255],  [0, 255, 255, 255], [255, 0, 255, 255], [100, 100, 255, 255]]
     color_index = 0
 
     for path in paths:
-        for ind in path:
-            #if ind % width != 0 and ind % width != width-1:
-            # set value in image to color_index to trace the path
-            cooY, cooX = ind2sub(layers.shape, ind)
-            layers[cooY, cooX] = colors[color_index]
+        for ind in path.path:
+            if ind % img.shape[1] != 0 and ind % img.shape[1] != img.shape[1]-1:
+                # set value in image to color_index to trace the path
+                cooY, cooX = ind2sub(layers.shape, ind)
+                layers[cooY, cooX] = colors[color_index]
+
+
         color_index += 1
 
 

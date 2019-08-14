@@ -9,7 +9,7 @@ class Rough_ilm_and_isos(object):
         #self.shrink_scale = 0.2
         self.shrink_scale = 1.0
         #self.offsets = np.arange(-20,21)
-        self.offsets = np.arange(-10,11)
+        self.offsets = np.arange(-5,6)
 
 
 class Path(object):
@@ -134,7 +134,7 @@ def getHyperReflectiveLayers(inputImg, param):
         roiImg[pathXArr,pathYArr] = 0
     
         # plot the masked path
-        plot_layers(gy, [pathArr])
+        #plot_layers(gy, [pathArr])
 
         paths[count] =  Path("", path, pathX, pathY)
 
