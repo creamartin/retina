@@ -13,12 +13,12 @@ import getHyperReflectiveLayers as hrl
 class Path(object):
 
 
-    def __init__(self, name, path, pathY, pathX):
+    def __init__(self, name, path, pathX, pathY):
         self.name = name
         self.path = path
         self.pathX = pathX
         self.pathY = pathY
-        self.pathYmean = np.mean(self.pathY)
+        self.pathYmean = np.mean(self.pathX)
 
     def getName(self):
         return self.name
@@ -245,11 +245,11 @@ def get_retinal_layers_core(layer_name, img, params,paths_list):
 
     # save data
     if matched_layers_id:
-        paths_list = np.append(paths_list,Path(layer_name, path, pathY, pathX))
+        paths_list = np.append(paths_list,Path(layer_name, path, pathX, pathY))
     else:
         #test 
         paths_list[index] = None
-        paths_list[index] = Path(layer_name, path, pathY, pathX)
+        paths_list[index] = Path(layer_name, path, pathX, pathY)
 
     
          

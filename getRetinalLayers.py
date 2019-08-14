@@ -83,7 +83,7 @@ def get_retinal_layers(img):
     #img = cv2.GaussianBlur(img,(3,3),0.8,0)
 
     # flatten image 
-    img, unflatten = flatten(img)
+    #img, unflatten = flatten(img)
 
     ## Median
     img = cv2.medianBlur(img,3)
@@ -107,7 +107,7 @@ def get_retinal_layers(img):
 
 ##################### Example Code #########################
 
-img = cv2.imread('7F87A800.tif', 0)
+img = cv2.imread('B5B3ADB0.tif', 0)
 imglayers, img_new = get_retinal_layers(img)
 plot_layers(img_new, imglayers)
 

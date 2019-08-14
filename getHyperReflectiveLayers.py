@@ -15,12 +15,12 @@ class Rough_ilm_and_isos(object):
 class Path(object):
 
 
-    def __init__(self, name, path, pathY, pathX):
+    def __init__(self, name, path, pathX, pathY):
         self.name = name
         self.path = path
         self.pathX = pathX
         self.pathY = pathY
-        self.pathYmean = np.mean(self.pathY)
+        self.pathYmean = np.mean(self.pathX)
 
     def getName(self):
         return self.name
@@ -136,7 +136,7 @@ def getHyperReflectiveLayers(inputImg, param):
         # plot the masked path
         #plot_layers(gy, [pathArr])
 
-        paths[count] =  Path("", path, pathY, pathX)
+        paths[count] =  Path("", path, pathX, pathY)
 
         count += 1
 
