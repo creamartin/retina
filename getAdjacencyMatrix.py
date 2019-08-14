@@ -1,18 +1,17 @@
-import numpy as np
 import cv2
-import scipy as sc
+import numpy as np
+from matplotlib import pyplot as plt
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import dijkstra
-from matplotlib import pyplot as plt
-import time
 
 
 #####################################
 
 # Defines a translation from 2 coordinates to a single index number
 def sub2ind(array_shape, rows, cols):
-    ind = rows*array_shape[1] + cols
+    ind = rows * array_shape[1] + cols
     return ind
+
 
 # Defines a reversed translation from index to 2 coordinates
 def ind2sub(array_shape, ind):
@@ -20,9 +19,9 @@ def ind2sub(array_shape, ind):
     cols = ind % array_shape[1]
     return (rows, cols)
 
+
 # constructs the adjacency matrices from an input image
 def get_adjacency_matrix(img):
-
     # pad image with vertical column on both sides
     img = cv2.copyMakeBorder(img, 0, 0, 1, 1, cv2.BORDER_CONSTANT, value=0)
 
@@ -30,38 +29,38 @@ def get_adjacency_matrix(img):
     gy = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=5)
 
     # norm values between 0 and 1
-    gradImg = (gy - np.amin(gy))/(np.amax(gy)-np.amin(gy))
+    gradImg = (gy - np.amin(gy)) / (np.amax(gy) - np.amin(gy))
 
     # get the invert of the gradient image.
-    gradImgMinus = 1-gradImg
+    gradImgMinus = 1 - gradImg
 
     height, width = gradImg.shape
-    
+
     # minimal weight
     minWeight = 1E-5
 
     # iteration order over neighboring pixels in X and Y direction
-    neighborIterX = [1, 1,  1, 0,  0, -1, -1, -1]
-    neighborIterY = [1, 0, -1, 1, -1,  1,  0, -1]
+    neighborIterX = [1, 1, 1, 0, 0, -1, -1, -1]
+    neighborIterY = [1, 0, -1, 1, -1, 1, 0, -1]
 
     # get location A (in the image as indices) for each weight.
-    adjMAsub = np.arange(height*width)
+    adjMAsub = np.arange(height * width)
 
     # convert adjMA to subscripts
-    adjMAy,adjMAx = ind2sub(gradImg.shape, adjMAsub)
+    adjMAy, adjMAx = ind2sub(gradImg.shape, adjMAsub)
 
-    adjMAsub = adjMAsub.reshape(adjMAsub.size,1)
+    adjMAsub = adjMAsub.reshape(adjMAsub.size, 1)
     szadjMAsub = adjMAsub.shape
 
-    #% prepare to obtain the 8-connected neighbors of adjMAsub
+    # % prepare to obtain the 8-connected neighbors of adjMAsub
     # Construct an array by repeating neighborIterX the number of times given in the second argument
-    neighborIterX = np.tile(neighborIterX, (szadjMAsub[0],1))
-    neighborIterY = np.tile(neighborIterY, (szadjMAsub[0],1))
+    neighborIterX = np.tile(neighborIterX, (szadjMAsub[0], 1))
+    neighborIterY = np.tile(neighborIterY, (szadjMAsub[0], 1))
 
     # % repmat to [8,1]
-    adjMAsub = np.tile(adjMAsub,(1, 8))
-    adjMAx = np.tile(adjMAx,(1, 8))
-    adjMAy = np.tile(adjMAy,(1, 8))
+    adjMAsub = np.tile(adjMAsub, (1, 8))
+    adjMAx = np.tile(adjMAx, (1, 8))
+    adjMAy = np.tile(adjMAy, (1, 8))
 
     #  get 8-connected neighbors of adjMAsub, adjMBx, adjMBy and adjMBsub
     adjMBx = adjMAx + neighborIterX.T.flatten()
@@ -70,15 +69,15 @@ def get_adjacency_matrix(img):
     #  make sure all locations are within the image.
     keepInd1 = np.logical_and(adjMBx >= 0, adjMBx < width)
     keepInd2 = np.logical_and(adjMBy >= 0, adjMBy < height)
-    keepInd = np.logical_and(keepInd1,keepInd2)
+    keepInd = np.logical_and(keepInd1, keepInd2)
 
     adjMAsub = adjMAsub.T.flatten()
-    adjMAsub = adjMAsub.reshape(1,adjMAsub.size)
+    adjMAsub = adjMAsub.reshape(1, adjMAsub.size)
     adjMAsub = adjMAsub[keepInd]
     adjMBx = adjMBx[keepInd]
     adjMBy = adjMBy[keepInd]
 
-    adjMBsub = sub2ind(gradImg.shape,adjMBy[:],adjMBx[:])
+    adjMBsub = sub2ind(gradImg.shape, adjMBy[:], adjMBx[:])
 
     # calculate weight
     gradImg1 = gradImg.flatten()
@@ -88,13 +87,13 @@ def get_adjacency_matrix(img):
 
     # pad minWeight on both sides
     imgTmp = np.zeros(gradImg.shape)
-    imgTmp[:,0] = 1
-    imgTmp[:,-1] = 1
+    imgTmp[:, 0] = 1
+    imgTmp[:, -1] = 1
 
-
-    ind1, ind2 = np.nonzero(imgTmp[:] == 1)   # find all pixels equal 1
+    ind1, ind2 = np.nonzero(imgTmp[:] == 1)  # find all pixels equal 1
     indices = sub2ind(imgTmp.shape, ind1, ind2)
-    imageSideInd = np.isin(adjMBsub,indices) # Test whether each element of the first array is also present in a second array
+    imageSideInd = np.isin(adjMBsub,
+                           indices)  # Test whether each element of the first array is also present in a second array
     adjMW[imageSideInd] = minWeight
     adjMmW[imageSideInd] = minWeight
 
@@ -103,9 +102,11 @@ def get_adjacency_matrix(img):
 
     return adjMatrixW, adjMatrixMW, adjMAsub, adjMBsub, adjMW, adjMmW, img
 
-# constructs a SiPy Compressed Sparse Row matrix 
-def sparse_matrix (adjMW, adjMAsub, adjMBsub, img):
-    adjMatrix = csr_matrix((adjMW, (adjMAsub,adjMBsub)),shape=(img.shape[0]*img.shape[1],img.shape[0]*img.shape[1]), dtype=np.float)
+
+# constructs a SiPy Compressed Sparse Row matrix
+def sparse_matrix(adjMW, adjMAsub, adjMBsub, img):
+    adjMatrix = csr_matrix((adjMW, (adjMAsub, adjMBsub)),
+                           shape=(img.shape[0] * img.shape[1], img.shape[0] * img.shape[1]), dtype=np.float)
     adjMatrix.eliminate_zeros()
     return adjMatrix
 
@@ -113,11 +114,12 @@ def sparse_matrix (adjMW, adjMAsub, adjMBsub, img):
 # Apply Dijkstra algorith for finding the shortest path
 def find_shortest_path(adjMatrixW):
     dist_matrix, predecessors = dijkstra(
-        csgraph=adjMatrixW, indices=0, directed=True, return_predecessors=True, min_only=False)
+        csgraph=adjMatrixW, indices=0, directed=True, return_predecessors=True)
     return dist_matrix, predecessors
 
+
 # Constructs path from predecessors
-def get_path(Pr,  j):
+def get_path(Pr, j):
     path = np.array([j])
     k = j
     while Pr[k] != -9999:
@@ -127,22 +129,19 @@ def get_path(Pr,  j):
 
 
 def plot_layers(img, paths):
-
     layers = np.zeros([img.shape[0], img.shape[1], 4], dtype=np.uint8)
-    colors =  [[255, 0, 0, 255],  [0, 255, 0, 255],
-     [0, 0, 255, 255], [255, 255, 0, 255],  [0, 255, 255, 255], [255, 0, 255, 255], [100, 100, 255, 255]]
+    colors = [[255, 0, 0, 255], [0, 255, 0, 255],
+              [0, 0, 255, 255], [255, 255, 0, 255], [0, 255, 255, 255], [255, 0, 255, 255], [100, 100, 255, 255]]
     color_index = 0
 
     for path in paths:
         for ind in path.path:
-            if ind % img.shape[1] != 0 and ind % img.shape[1] != img.shape[1]-1:
+            if ind % img.shape[1] != 0 and ind % img.shape[1] != img.shape[1] - 1:
                 # set value in image to color_index to trace the path
                 cooY, cooX = ind2sub(layers.shape, ind)
                 layers[cooY, cooX] = colors[color_index]
 
-
         color_index += 1
-
 
     # Show layers
     plt.imshow(img, cmap='gray')
@@ -156,10 +155,10 @@ def plot_layers(img, paths):
 
 
 # get path of an image.
-#folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/'
-#folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/sick/with_druses/'
-#folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/healthy/normal/'
-#name = '38B062A0.tif'
+# folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/'
+# folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/sick/with_druses/'
+# folderPath = 'C:/Users/ylliv/Documents/Medientechnologie/Medientechnologie/6.Semester/Retina/Python/Reduced_data_set/Reduced_data_set/healthy/normal/'
+# name = '38B062A0.tif'
 name = '437D6CD0.tif'
 
 # #myimg = cv2.imread(folderPath + name, 0)

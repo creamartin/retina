@@ -2,29 +2,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import skimage.io as io
-from skimage.filters import threshold_otsu
 from scipy.signal import savgol_filter
-
-
-# cropped,top,bottom = find_roi(img)
-def find_roi(img):
-    img = img.astype('float32')
-
-    # binarize
-    thresh = threshold_otsu(img)
-    binary = img > thresh
-    binary = binary.astype(np.uint8)
-
-    # close
-    kernel = np.ones((25, 25), np.uint8)
-    close = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
-
-    # crop
-    height, width = close.shape
-    first_white = int(np.argmax(close > 0) / width)
-    last_white = height - int(np.argmax(np.flip(close) > 0) / width)
-    crop = img[:last_white, :]
-    return crop, first_white, last_white
 
 
 # flattened, unshiftList = flatten(img)
@@ -85,7 +63,7 @@ def flatten(img):
     for i in range(width):
         shiftList = np.append(shiftList, nearest_neighbour_rpe[i])
         # print rpe-line-estimate
-        #img[int(nearest_neighbour_rpe[i]), i] = 1.
+        # img[int(nearest_neighbour_rpe[i]), i] = 1.
         # Todo is this okay?
         # col = img[:, i]
         # for y in range(height):
@@ -172,92 +150,6 @@ def find_nearest_return_index(array, value):
     return idx
 
 
-def intensity_profiling(img, rpe_estimate):
-    img = img.astype('float32')
-
-    # denoise with 3x19 average filter
-    kernel = np.ones((3, 19), np.float32) / 48
-    img = cv2.filter2D(img, -1, kernel)
-
-    # 0 -> if: smaller than the median of their corresponding column
-    for i in range(img.shape[1]):
-        median = np.median(img[:, i])
-        curCol = img[:, i]
-        thresh = np.array([0. if float(x) < median else float(x) for x in curCol], dtype=np.float32)
-        img[:, i] = thresh
-
-    # second-order derivative of the contrast-enhanced image to boost layer boundaries
-    for i in range(img.shape[1]):
-        curCol = img[:, i]
-        first_derivative = np.gradient(curCol)
-        second_derivative = np.gradient(first_derivative)
-        img[:, i] = second_derivative
-
-    # thresholding 0
-    ret, img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY)
-
-    # set all non-zero clusters less than 5 pixels tall to zero
-    for i in range(img.shape[1]):
-        curCol = img[:, i]
-        clustersize = 0
-        for j in range(len(curCol)):
-            if curCol[j] >= 254.:
-                clustersize = clustersize + 1
-            elif clustersize < 5:
-                while clustersize > 0:
-                    curCol[j - clustersize] = 0.
-                    clustersize = clustersize - 1
-        img[:, i] = curCol
-
-    # join the remaining clusters that are closer than 3 pixels from each other.
-    # Todo Test if it makes a difference?
-    for i in range(img.shape[0]):
-        curRow = img[i, :]
-        gap = 0
-        for j in range(len(curRow)):
-            if curRow[j] >= 254.:
-                if gap < 3:
-                    while gap > 0:
-                        curRow[j - gap] = 255.
-                        gap = gap - 1
-                gap = 0
-            else:
-                gap = gap + 1
-        img[i, :] = curRow
-
-    # horizontal 1-D closing operation with a kernel of 10 pixels
-    kernel = np.ones((1, 10), np.uint8)
-    opening = np.uint8(cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel))
-    img = opening
-
-    # remove any cluster smaller than 500 pixels
-    nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(img)
-    height, width = labels.shape
-    for i in range(height):
-        for j in range(width):
-            if labels[i, j] > 0:
-                for label in range(1, nlabels):
-                    y_values, x_values = np.where(labels == label)
-                    if len(x_values) < 500:
-                        for k in range(len(x_values)):
-                            labels[y_values[k], x_values[k]] = 0.
-                    else:
-                        for k in range(len(x_values)):
-                            labels[y_values[k], x_values[k]] = -1.
-    img = np.array([-x for x in labels])
-    # interpolating the approximate location
-    # from neighboring columns in which they are detached
-
-    # remove values below rpe
-    # for i in range(width):
-    #     rpe_pos = rpe_estimate(i)
-    #     for j in range(height):
-    #         if j > rpe_pos + 5:
-    #             img[j, i] = 0.0
-
-    return img
-
-
 # y x
 def path_to_y_array(paths, width):
     paths = np.array(sorted(np.array(paths), key=lambda tup: tup[0]))
@@ -285,17 +177,6 @@ def mask_image(img, y_values, offset=0, above=False):
 
 
 ################################ examples################################
-def exampleCrop():
-    image_file = '../testvectors/sick.tif'
-    im = io.imread(image_file, as_gray=True)
-    im = im.astype('float32')
-    cropped, top, bottom = find_roi(im)
-    plt.gca().imshow(cropped, cmap='gray')
-    plt.figure()
-    plt.gca().imshow(im, cmap='gray')
-    plt.setp(plt.gca(), xticks=[], yticks=[])
-    plt.show()
-
 
 def exampleFlatten():
     image_file = '../testvectors/sick.tif'
@@ -304,25 +185,6 @@ def exampleFlatten():
     flattened, shiftlist = flatten(im)
     plt.gca().imshow(flattened, cmap='gray')
     plt.setp(plt.gca(), xticks=[], yticks=[])
-    plt.show()
-
-
-def exampleIntensityProfiling():
-    image_file = '../testvectors/sick/with druses/7CE97D80.tif'
-    im = io.imread(image_file, as_gray=True)
-    im = im.astype('float32')
-    crop, top, bottom = find_roi(im)
-    flattened, invert, rpe = flatten(crop)
-    result = shiftColumn(invert, flattened)
-
-    both = np.vstack((crop, flattened, result))
-
-    fig = plt.gcf()
-    ax = plt.Axes(fig, [0., 0., 1., 1.])
-    ax.set_axis_off()
-    fig.add_axes(ax)
-    ax.imshow(both, cmap='gray')
-    plt.setp(ax, xticks=[], yticks=[])
     plt.show()
 
 # exampleIntensityProfiling()
