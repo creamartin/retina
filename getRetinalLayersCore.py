@@ -13,12 +13,12 @@ import getHyperReflectiveLayers as hrl
 class Path(object):
 
 
-    def __init__(self, name, path, pathX, pathY):
+    def __init__(self, name, path, pathY, pathX):
         self.name = name
         self.path = path
         self.pathX = pathX
         self.pathY = pathY
-        self.pathXmean = np.mean(self.pathX)
+        self.pathYmean = np.mean(self.pathY)
 
     def getName(self):
         return self.name
@@ -31,7 +31,7 @@ class Path(object):
 
     def setPath(self, path):
         self.path = path
-        self.pathXmean = np.mean(self.path)
+        self.pathYmean = np.mean(self.path)
 
     def getPathX(self):
         return self.pathX
@@ -45,8 +45,8 @@ class Path(object):
     def setPathY(self, pathY):
         self.pathY = pathY
 
-    def getPathXmean(self):
-        return self.pathXmean
+    def getPathYmean(self):
+        return self.pathYmean
 
 
 
@@ -104,7 +104,7 @@ def get_retinal_layers_core(layer_name, img, params,paths_list):
             ind_pathX   = ind_pathX[0].reshape(1,ind_pathX[0].size) 
 
             start_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathX[ind_pathX[0,0]]
-            end_ind_0   = start_ind_0 + int(round(next((x for x in paths_list if x.name == 'isos'), None).pathXmean - next((x for x in paths_list if x.name == 'ilm'), None).pathXmean))      
+            end_ind_0   = start_ind_0 + int(round(next((x for x in paths_list if x.name == 'isos'), None).pathYmean - next((x for x in paths_list if x.name == 'ilm'), None).pathYmean))      
 
             start_ind = start_ind_0 # The matlab-code use an additional offset (params.rpe_0/1) -> able to add later on 
             end_ind   = end_ind_0
@@ -245,11 +245,11 @@ def get_retinal_layers_core(layer_name, img, params,paths_list):
 
     # save data
     if matched_layers_id:
-        paths_list = np.append(paths_list,Path(layer_name, path, pathX, pathY))
+        paths_list = np.append(paths_list,Path(layer_name, path, pathY, pathX))
     else:
         #test 
         paths_list[index] = None
-        paths_list[index] = Path(layer_name, path, pathX, pathY)
+        paths_list[index] = Path(layer_name, path, pathY, pathX)
 
     
          

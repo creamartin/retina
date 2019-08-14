@@ -15,12 +15,12 @@ class Rough_ilm_and_isos(object):
 class Path(object):
 
 
-    def __init__(self, name, path, pathX, pathY):
+    def __init__(self, name, path, pathY, pathX):
         self.name = name
         self.path = path
         self.pathX = pathX
         self.pathY = pathY
-        self.pathXmean = np.mean(self.pathX)
+        self.pathYmean = np.mean(self.pathY)
 
     def getName(self):
         return self.name
@@ -33,7 +33,6 @@ class Path(object):
 
     def setPath(self, path):
         self.path = path
-        self.pathXmean = np.mean(self.path)
 
     def getPathX(self):
         return self.pathX
@@ -46,9 +45,10 @@ class Path(object):
 
     def setPathY(self, pathY):
         self.pathY = pathY
+        self.pathYmean = np.mean(self.pathY)
 
-    def getPathXmean(self):
-        return self.pathXmean
+    def getPathYmean(self):
+        return self.pathYmean
 
 
 def getHyperReflectiveLayers(inputImg, param):
@@ -136,21 +136,27 @@ def getHyperReflectiveLayers(inputImg, param):
         # plot the masked path
         #plot_layers(gy, [pathArr])
 
-        paths[count] =  Path("", path, pathX, pathY)
+        paths[count] =  Path("", path, pathY, pathX)
 
         count += 1
 
     #format paths back to original size
    
     
-    if paths[0].getPathXmean() > paths[1].getPathXmean():
+    if paths[0].getPathYmean() > paths[1].getPathYmean():
         paths[0].name = 'isos'
         paths[1].name = 'ilm'
     else:
         paths[0].name = 'ilm'
         paths[1].name = 'isos'
 
+
+    #flatten image to segment isos again
+
     return paths
+
+
+
 
 ##############################################
 ################   EXAMPLE   #################
