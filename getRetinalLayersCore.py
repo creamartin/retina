@@ -108,6 +108,7 @@ def getHyperReflectiveLayers(inputImg, param):
         pathY, pathX = ind2sub(newImg.shape, path)
         pathY = pathY[np.gradient(pathX) != 0]
         pathX = pathX[np.gradient(pathX) != 0]
+        path = sub2ind(inputImg.shape,pathY,pathX)
 
         # block the obtained path and abit around it
         pathYArr = np.tile(pathY, (len(offsets), len(offsets)))
@@ -148,7 +149,7 @@ def getHyperReflectiveLayers(inputImg, param):
 
 
 # This function is used in get_retinal_layers
-def get_retinal_layers_core(layer_name, img, params, paths_list):
+def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
     if layer_name == 'roughILMandISOS':
 
         img_old = img[:, 1:img.shape[1] - 2]
@@ -173,7 +174,10 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
     sz_img = img.shape
     roi_img = np.zeros(sz_img)
 
-    for k in range(0, img.shape[1] - 1):
+
+    # runs through the image with the added columns 
+    # Because of that one have to start in the second column and end befor the last column 
+    for k in range(1, img.shape[1] - 1):
 
         if layer_name == 'nflgcl':
 
@@ -199,7 +203,7 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
             ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
 
-            start_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]]
+            start_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]] + ((-1)*shift_array[k])
             end_ind_0 = start_ind_0 + int(round(
                 next((x for x in paths_list if x.name == 'isos'), None).pathYmean - next(
                     (x for x in paths_list if x.name == 'ilm'), None).pathYmean))
@@ -237,12 +241,14 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
             # region near the previous rough segmented isos path
 
             # use flatten image 
+            # Search below the ilm layer after the isos in the flatten adjacency matrix 
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathX == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'ilm'), None).pathX == k)
             ind_pathX = np.reshape(ind_pathX, (1, ind_pathX[0].size))
 
-            start_ind = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]] - params.is_os_0
-            end_ind = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]] + params.is_os_1
+            start_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] - params.is_os_0  + ((-1)*shift_array[k])
+            end_ind = img.shape[0] -1 
+            #end_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] + params.is_os_1 + ((-1)shift_array[k])
 
         elif layer_name == 'iplinl':
 

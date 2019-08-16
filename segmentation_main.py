@@ -44,6 +44,14 @@ class Params(object):
         self.adjMW = []
         self.adjMmW = []
 
+        # flatten adjacency matrices parameter
+        self.adjMatrixW_f = []
+        self.adjMatrixMW_f = []
+        self.adjMAsub_f = []
+        self.adjMBsub_f = []
+        self.adjMW_f = []
+        self.adjMmW_f = []
+
         # inner class rough_ilm_and_isos
         self.rough_ilm_and_isos = self.Rough_ilm_and_isos()
 
@@ -70,7 +78,8 @@ def get_retinal_layers(img):
     # img = cv2.GaussianBlur(img,(3,3),0.8,0)
 
     # flatten image 
-    # img, unflatten = flatten(img)
+    img_f, unflatten = flatten(img)
+    
 
     ## Median
     img = cv2.medianBlur(img, 3)
@@ -79,13 +88,16 @@ def get_retinal_layers(img):
     params.adjMatrixW, params.adjMatrixMW, params.adjMAsub, params.adjMBsub, params.adjMW, params.adjMmW, img_new = get_adjacency_matrix(
         img)
 
+    params.adjMatrixW_f, params.adjMatrixMW_f, params.adjMAsub_f, params.adjMBsub_f, params.adjMW_f, params.adjMmW_f, img_new_f = get_adjacency_matrix(
+        img)
+
     # Pre-set order 
     retinal_layer_segmentation_order = ['roughILMandISOS', 'ilm', 'isos', 'rpe', 'inlopl', 'nflgcl', 'iplinl', 'oplonl']
 
     # Iterate through the list and save the found layer boundaries
     retinal_layers = []  # np.empty(7,dtype = object)
     for layer in retinal_layer_segmentation_order:
-        retinal_layers = get_retinal_layers_core(layer, img_new, params, retinal_layers)
+        retinal_layers = get_retinal_layers_core(layer, img_new, params, retinal_layers,unflatten)
 
     return retinal_layers, img_new
 
