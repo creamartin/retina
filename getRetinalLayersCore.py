@@ -129,7 +129,7 @@ def getHyperReflectiveLayers(inputImg, param):
         roiImg[pathYArr, pathXArr] = 0
 
         # plot the masked path
-        plot_layers(gy, [pathArr])
+        #plot_layers(gy, [pathArr])
 
         paths[count] = Path("", path, pathY, pathX)
 
@@ -179,13 +179,13 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
 
             # region between 'ilm and 'inlopl'
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'ilm'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'ilm'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
-            start_ind_0 = next((x for x in paths_list if x.name == 'ilm'), None).pathX[ind_pathX[0, 0]]
+            start_ind_0 = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]]
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'inlopl'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'inlopl'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
-            end_ind_0 = next((x for x in paths_list if x.name == 'inlopl'), None).pathX[ind_pathX[0, 0]]
+            end_ind_0 = next((x for x in paths_list if x.name == 'inlopl'), None).pathY[ind_pathX[0, 0]]
 
             start_ind = start_ind_0 + 5  # The matlab-code use an additional offset (params.nflgcl_0/1) -> able to add later on
             end_ind = end_ind_0 - 5
@@ -196,10 +196,10 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
 
             # use flattened image 
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
 
-            start_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathX[ind_pathX[0, 0]]
+            start_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]]
             end_ind_0 = start_ind_0 + int(round(
                 next((x for x in paths_list if x.name == 'isos'), None).pathYmean - next(
                     (x for x in paths_list if x.name == 'ilm'), None).pathYmean))
@@ -211,13 +211,13 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
 
             # region between 'ilm' and 'isos'
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'ilm'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'ilm'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
-            start_ind_0 = next((x for x in paths_list if x.name == 'ilm'), None).pathX[ind_pathX[0, 0]]
+            start_ind_0 = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]]
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
-            end_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathX[ind_pathX[0, 0]]
+            end_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]]
 
             start_ind = start_ind_0 + 10  # The matlab-code use an additional offset (params.inlopl_0/1)  -> able to add later on
             end_ind = end_ind_0 - 10
@@ -226,11 +226,11 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
 
             # region near the previous rough segmented ilm path
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'ilm'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'ilm'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
 
-            start_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathX[ind_pathX[0, 0]] - params.ilm_0
-            end_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathX[ind_pathX[0, 0]] + params.ilm_1
+            start_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] - params.ilm_0
+            end_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] + params.ilm_1
 
         elif layer_name == 'isos':
 
@@ -238,23 +238,23 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
 
             # use flatten image 
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathX == k)
             ind_pathX = np.reshape(ind_pathX, (1, ind_pathX[0].size))
 
-            start_ind = next((x for x in paths_list if x.name == 'isos'), None).pathX[ind_pathX[0, 0]] - params.is_os_0
-            end_ind = next((x for x in paths_list if x.name == 'isos'), None).pathX[ind_pathX[0, 0]] + params.is_os_1
+            start_ind = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]] - params.is_os_0
+            end_ind = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]] + params.is_os_1
 
         elif layer_name == 'iplinl':
 
             # region between 'nflgcl' and 'inlopl'
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'nflgcl'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'nflgcl'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
-            start_ind_0 = next((x for x in paths_list if x.name == 'nflgcl'), None).pathX[ind_pathX[0, 0]]
+            start_ind_0 = next((x for x in paths_list if x.name == 'nflgcl'), None).pathY[ind_pathX[0, 0]]
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'inlopl'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'inlopl'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
-            end_ind_0 = next((x for x in paths_list if x.name == 'inlopl'), None).pathX[ind_pathX[0, 0]]
+            end_ind_0 = next((x for x in paths_list if x.name == 'inlopl'), None).pathY[ind_pathX[0, 0]]
 
             start_ind = start_ind_0 + 2  # The matlab-code use an additional offset (params.iplinl_0/1) -> able to add later on
             end_ind = end_ind_0 - 3
@@ -263,13 +263,13 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
 
             # region between 'inlopl' and 'isos'
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'inlopl'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'inlopl'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
-            start_ind_0 = next((x for x in paths_list if x.name == 'inlopl'), None).pathX[ind_pathX[0, 0]]
+            start_ind_0 = next((x for x in paths_list if x.name == 'inlopl'), None).pathY[ind_pathX[0, 0]]
 
-            ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathY == k)
+            ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
-            end_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathX[ind_pathX[0, 0]]
+            end_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]]
 
             start_ind = start_ind_0 + 3  # The matlab-code use an additional offset (params.oplonl_0/1)  -> able to add later on
             end_ind = end_ind_0 - 5
@@ -283,7 +283,7 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
             start_ind = 0
 
         if end_ind > sz_img[0] - 1:
-            end_ind = sz_img(0) - 1
+            end_ind = sz_img[0] - 1
 
 
 
@@ -318,7 +318,7 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
         path = get_path(predecessors, len(dist_matrix) - 1)
 
     # get pathX and pathY
-    pathX, pathY = ind2sub(sz_img, path)
+    pathY, pathX = ind2sub(sz_img, path)
 
     # check if a layer is to overwrite like 'ilm' or 'isos' or if new layer is to added to paths_list
     matched_layers_id = True
@@ -330,10 +330,10 @@ def get_retinal_layers_core(layer_name, img, params, paths_list):
 
     # save data
     if matched_layers_id:
-        paths_list = np.append(paths_list, Path(layer_name, path, pathX, pathY))
+        paths_list = np.append(paths_list, Path(layer_name, path, pathY, pathX))
     else:
         # test
         paths_list[index] = None
-        paths_list[index] = Path(layer_name, path, pathX, pathY)
+        paths_list[index] = Path(layer_name, path, pathY, pathX)
 
     return paths_list

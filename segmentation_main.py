@@ -87,7 +87,6 @@ def get_retinal_layers(img):
     for layer in retinal_layer_segmentation_order:
         retinal_layers = get_retinal_layers_core(layer, img_new, params, retinal_layers)
 
-    plot_layers(img_new, retinal_layers)
     return retinal_layers, img_new
 
 

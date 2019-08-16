@@ -40,8 +40,9 @@ def get_adjacency_matrix(img):
     minWeight = 1E-5
 
     # iteration order over neighboring pixels in X and Y direction
-    neighborIterX = [1, 1,  1, 0,  0, -1, -1, -1]
     neighborIterY = [1, 0, -1, 1, -1,  1,  0, -1]
+    neighborIterX = [1, 1,  1, 0,  0, -1, -1, -1]
+
 
     # get location A (in the image as indices) for each weight.
     adjMAsub = np.arange(height*width)
@@ -54,28 +55,29 @@ def get_adjacency_matrix(img):
 
     #% prepare to obtain the 8-connected neighbors of adjMAsub
     # Construct an array by repeating neighborIterX the number of times given in the second argument
-    neighborIterX = np.tile(neighborIterX, (szadjMAsub[0],1))
     neighborIterY = np.tile(neighborIterY, (szadjMAsub[0],1))
-
+    neighborIterX = np.tile(neighborIterX, (szadjMAsub[0],1))
+    
     # % repmat to [8,1]
     adjMAsub = np.tile(adjMAsub,(1, 8))
-    adjMAx = np.tile(adjMAx,(1, 8))
     adjMAy = np.tile(adjMAy,(1, 8))
+    adjMAx = np.tile(adjMAx,(1, 8))
+
 
     #  get 8-connected neighbors of adjMAsub, adjMBx, adjMBy and adjMBsub
+    adjMBy = adjMAy + neighborIterY.T.flatten()    
     adjMBx = adjMAx + neighborIterX.T.flatten()
-    adjMBy = adjMAy + neighborIterY.T.flatten()
 
     #  make sure all locations are within the image.
-    keepInd1 = np.logical_and(adjMBx >= 0, adjMBx < width)
-    keepInd2 = np.logical_and(adjMBy >= 0, adjMBy < height)
+    keepInd1 = np.logical_and(adjMBy >= 0, adjMBy < height)    
+    keepInd2 = np.logical_and(adjMBx >= 0, adjMBx < width)
     keepInd = np.logical_and(keepInd1,keepInd2)
 
     adjMAsub = adjMAsub.T.flatten()
     adjMAsub = adjMAsub.reshape(1,adjMAsub.size)
     adjMAsub = adjMAsub[keepInd]
+    adjMBy = adjMBy[keepInd]    
     adjMBx = adjMBx[keepInd]
-    adjMBy = adjMBy[keepInd]
 
     adjMBsub = sub2ind(gradImg.shape,adjMBy[:],adjMBx[:])
 
@@ -126,17 +128,17 @@ def get_path(Pr,  j):
 
 
 def plot_layers(img, paths):
-
+    width = img.shape[1]
     layers = np.zeros([img.shape[0], img.shape[1], 4], dtype=np.uint8)
-    colors =  [[255, 0, 0, 255],  [0, 255, 0, 255], [0, 0, 255, 255]]
+    colors =  [[255, 0, 0, 255],  [0, 255, 0, 255], [0, 0, 255, 255], [0, 255, 255, 255], [255, 0, 255, 255], [255, 255, 0, 255], [255, 100, 0, 255]]
     color_index = 0
 
     for path in paths:
-        for ind in path:
-            #if ind % width != 0 and ind % width != width-1:
+        for ind in path.path:
+            if ind % width != 0 and ind % width != width-1:
             # set value in image to color_index to trace the path
-            cooY, cooX = ind2sub(layers.shape, ind)
-            layers[cooY, cooX] = colors[color_index]
+                cooY, cooX = ind2sub(layers.shape, ind)
+                layers[cooY, cooX] = colors[color_index]
         color_index += 1
 
 
