@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+import segmentation_helper as sh
 from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path, get_path, sub2ind, ind2sub
 
 # path class
@@ -132,7 +132,7 @@ def getHyperReflectiveLayers(inputImg, param):
         # plot the masked path
         #plot_layers(gy, [pathArr])
 
-        paths[count] = Path("", path, pathY, pathX)
+        paths[count] = Path("", path, pathY[1:-1], pathX[2:])
 
         count += 1
 
@@ -152,7 +152,7 @@ def getHyperReflectiveLayers(inputImg, param):
 def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
     if layer_name == 'roughILMandISOS':
 
-        img_old = img[:, 1:img.shape[1] - 2]
+        img_old = img[:, 1:-1]
         temp_paths = getHyperReflectiveLayers(img_old,
                                               params.rough_ilm_and_isos)  # Get the rough segmentation of the first prominate layers ILM and ISOS
         paths_list = None
@@ -160,7 +160,7 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
         return temp_paths
 
 
-    elif layer_name in ['nflgcl', 'inlopl', 'ilm', 'isos', 'oplonl', 'iplinl', 'rpe']:
+    elif layer_name in ['nflgcl', 'inlopl', 'ilm', 'oplonl', 'iplinl']:
 
         adj_ma = params.adjMAsub
         adj_mb = params.adjMBsub
@@ -168,16 +168,24 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
         adj_MmW = params.adjMmW
 
 
-        # falla
+    elif layer_name in ['isos','rpe']:
+
+        adj_ma = params.adjMAsub_f
+        adj_mb = params.adjMBsub_f
+        adj_MW = params.adjMW_f
+        adj_MmW = params.adjMmW_f
+
 
     # init region of interest
     sz_img = img.shape
+    sz_img_org = np.array([sz_img[0],sz_img[1]-2])
     roi_img = np.zeros(sz_img)
 
 
     # runs through the image with the added columns 
     # Because of that one have to start in the second column and end befor the last column 
-    for k in range(1, img.shape[1] - 1):
+    test = range(0, sz_img_org[1])
+    for k in range(0, sz_img_org[1]):
 
         if layer_name == 'nflgcl':
 
@@ -203,13 +211,13 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
             ind_pathX = np.where(next((x for x in paths_list if x.name == 'isos'), None).pathX == k)
             ind_pathX = ind_pathX[0].reshape(1, ind_pathX[0].size)
 
-            start_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]] + ((-1)*shift_array[k])
-            end_ind_0 = start_ind_0 + int(round(
-                next((x for x in paths_list if x.name == 'isos'), None).pathYmean - next(
-                    (x for x in paths_list if x.name == 'ilm'), None).pathYmean))
+            start_ind_0 = next((x for x in paths_list if x.name == 'isos'), None).pathY[ind_pathX[0, 0]] + 10 + ((-1)*shift_array[k])
+            #end_ind_0 = start_ind_0 + int(round(
+                #next((x for x in paths_list if x.name == 'isos'), None).pathYmean - next(
+                    #(x for x in paths_list if x.name == 'ilm'), None).pathYmean))
 
             start_ind = start_ind_0  # The matlab-code use an additional offset (params.rpe_0/1) -> able to add later on
-            end_ind = end_ind_0
+            end_ind = img.shape[0] -1
 
         elif layer_name == 'inlopl':
 
@@ -246,7 +254,7 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
             ind_pathX = np.where(next((x for x in paths_list if x.name == 'ilm'), None).pathX == k)
             ind_pathX = np.reshape(ind_pathX, (1, ind_pathX[0].size))
 
-            start_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] - params.is_os_0  + ((-1)*shift_array[k])
+            start_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] + 40  + ((-1)*shift_array[k])
             end_ind = img.shape[0] -1 
             #end_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] + params.is_os_1 + ((-1)shift_array[k])
 
@@ -294,11 +302,15 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
 
 
             # set column_wise region of interest to 1
-        roi_img[start_ind: end_ind, k] = 1
+        roi_img[start_ind: end_ind, k+1] = 1
 
     # set first and last column to 1
     roi_img[:, 0] = 1
     roi_img[:, -1] = 1
+
+    #cv2.imshow('image',roi_img)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
 
     # include only the region of interest in the adjacency matrix
     ind1, ind2 = np.nonzero(roi_img[:] == 1)
@@ -325,6 +337,22 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
 
     # get pathX and pathY
     pathY, pathX = ind2sub(sz_img, path)
+    pathY = pathY[np.gradient(pathX) != 0]
+    pathX = pathX[np.gradient(pathX) != 0]
+    path = sub2ind(sz_img_org,pathY,pathX)
+
+    # if flatten image is used unshift the coordinates
+    width = sz_img_org[1]
+    if layer_name in ['isos','rpe']:
+
+        # crop size to 512
+        pathY = pathY[1:-1]
+        pathX = pathX[2:]
+        y_list = np.flip(sh.path_to_y_array(list(zip(pathY,pathX)),width))
+        pathY = sh.shiftColumn(np.flip(shift_array), y_list)
+        pathX = np.flip(range(len(pathY)))
+        path = sub2ind(sz_img_org, pathY, pathX)
+
 
     # check if a layer is to overwrite like 'ilm' or 'isos' or if new layer is to added to paths_list
     matched_layers_id = True
@@ -336,10 +364,16 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
 
     # save data
     if matched_layers_id:
-        paths_list = np.append(paths_list, Path(layer_name, path, pathY, pathX))
+        if layer_name == 'rpe':
+            paths_list = np.append(paths_list, Path(layer_name, path, pathY, pathX))
+        else:
+            paths_list = np.append(paths_list, Path(layer_name, path, pathY[1:-1], pathX[2:]))
     else:
         # test
         paths_list[index] = None
-        paths_list[index] = Path(layer_name, path, pathY, pathX)
+        if layer_name == 'isos':
+            paths_list[index] = Path(layer_name, path, pathY, pathX)
+        else:
+            paths_list[index] = Path(layer_name, path, pathY[1:-1], pathX[2:])
 
     return paths_list

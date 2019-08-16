@@ -14,6 +14,7 @@ import numpy as np
 
 from getAdjacencyMatrix import get_adjacency_matrix, plot_layers
 from getRetinalLayersCore import get_retinal_layers_core
+from segmentation_helper import flatten
 
 
 class Params(object):
@@ -79,7 +80,8 @@ def get_retinal_layers(img):
 
     # flatten image 
     img_f, unflatten = flatten(img)
-    
+    print(unflatten[1])
+
 
     ## Median
     img = cv2.medianBlur(img, 3)
@@ -89,7 +91,7 @@ def get_retinal_layers(img):
         img)
 
     params.adjMatrixW_f, params.adjMatrixMW_f, params.adjMAsub_f, params.adjMBsub_f, params.adjMW_f, params.adjMmW_f, img_new_f = get_adjacency_matrix(
-        img)
+        img_f)
 
     # Pre-set order 
     retinal_layer_segmentation_order = ['roughILMandISOS', 'ilm', 'isos', 'rpe', 'inlopl', 'nflgcl', 'iplinl', 'oplonl']
@@ -104,6 +106,6 @@ def get_retinal_layers(img):
 
 ##################### Example Code #########################
 
-img = cv2.imread('B5B3ADB0.tif', 0)
+img = cv2.imread('7F87A800.tif', 0)
 imglayers, img_new = get_retinal_layers(img)
-plot_layers(img_new, imglayers)
+plot_layers(img, imglayers)
