@@ -15,7 +15,7 @@ import numpy as np
 from getRetinalLayersCore import get_retinal_layers_core
 from segmentation_helper import flatten
 
-from assets.getAdjacencyMatrix import get_adjacency_matrix, plot_layers
+from getAdjacencyMatrix import get_adjacency_matrix, plot_layers
 
 
 # This Object contains all the neccessary parameters of the segmentation 
@@ -137,7 +137,7 @@ img_name = '7F87A800.tif'  # multiple separate druses
 dir = "./assets/"
 
 
-img = cv2.imread(dir + img_name, 0)
+img = cv2.imread(img_name, 0)
 imglayers, img_new = get_retinal_layers(img)
-save_layers_to_file(imglayers, dir + str(img_name.split(".")[0]) + '.json')
+save_layers_to_file(imglayers, str(img_name.split(".")[0]) + '.json')
 plot_layers(img, imglayers)

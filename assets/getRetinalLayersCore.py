@@ -3,7 +3,7 @@ import json
 import numpy as np
 import segmentation_helper as sh
 
-from assets.getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path, get_path, sub2ind, \
+from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path, get_path, sub2ind, \
     ind2sub
 
 
