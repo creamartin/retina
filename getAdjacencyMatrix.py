@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+import matplotlib.lines as mlines
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import dijkstra
 
@@ -44,21 +45,23 @@ def get_adjacency_matrix(img):
     neighborIterX = [1, 1,  1, 0,  0, -1, -1, -1]
 
 
-    # get location A (in the image as indices) for each weight.
+    # 1 dimensional array to store the locations A (in the image as indices) for each weight.
+    # np.arange returns evenly spaced values within  the interval 0 to size of the image
     adjMAsub = np.arange(height*width)
 
-    # convert adjMA to subscripts
+    # convert adjMA to y, x coordinates
     adjMAy,adjMAx = ind2sub(gradImg.shape, adjMAsub)
 
+    # reshaping adjMAsub to a vertical vector
     adjMAsub = adjMAsub.reshape(adjMAsub.size,1)
     szadjMAsub = adjMAsub.shape
 
-    #% prepare to obtain the 8-connected neighbors of adjMAsub
+    # prepare to obtain the 8-connected neighbors of adjMAsub
     # Construct an array by repeating neighborIterX the number of times given in the second argument
     neighborIterY = np.tile(neighborIterY, (szadjMAsub[0],1))
     neighborIterX = np.tile(neighborIterX, (szadjMAsub[0],1))
     
-    # % repmat to [8,1]
+    # repeat 8 times
     adjMAsub = np.tile(adjMAsub,(1, 8))
     adjMAy = np.tile(adjMAy,(1, 8))
     adjMAx = np.tile(adjMAx,(1, 8))
@@ -104,7 +107,7 @@ def get_adjacency_matrix(img):
 
     return adjMatrixW, adjMatrixMW, adjMAsub, adjMBsub, adjMW, adjMmW, img
 
-# constructs a SiPy Compressed Sparse Row matrix 
+# constructs a SciPy Compressed Sparse Row matrix 
 def sparse_matrix (adjMW, adjMAsub, adjMBsub, img):
     adjMatrix = csr_matrix((adjMW, (adjMAsub,adjMBsub)),shape=(img.shape[0]*img.shape[1],img.shape[0]*img.shape[1]), dtype=np.float)
     adjMatrix.eliminate_zeros()
@@ -112,9 +115,9 @@ def sparse_matrix (adjMW, adjMAsub, adjMBsub, img):
 
 
 # Apply Dijkstra algorith for finding the shortest path
-def find_shortest_path(adjMatrixW):
+def find_shortest_path(adjMatrix):
     dist_matrix, predecessors = dijkstra(
-        csgraph=adjMatrixW, indices=0, directed=True, return_predecessors=True, min_only=False)
+        csgraph=adjMatrix, indices=0, directed=True, return_predecessors=True)
     return dist_matrix, predecessors
 
 # Constructs path from predecessors
@@ -126,14 +129,18 @@ def get_path(Pr,  j):
         k = Pr[k]
     return path
 
-
+# plots the retrieved layer boundaries on top of the B-scan image
 def plot_layers(img, paths):
     width = img.shape[1]
     layers = np.zeros([img.shape[0], img.shape[1], 4], dtype=np.uint8)
     colors =  [[255, 0, 0, 255],  [0, 255, 0, 255], [0, 0, 255, 255], [0, 255, 255, 255], [255, 0, 255, 255], [255, 255, 0, 255], [255, 100, 0, 255]]
+    color = ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'orange']
     color_index = 0
+    lines = []
 
     for path in paths:
+        lines.append(mlines.Line2D([], [], color= color[color_index], marker='_',
+                           markersize=5, label=path.name))
         for ind in path.path:
             if ind % width != 0 and ind % width != width-1:
             # set value in image to color_index to trace the path
@@ -145,6 +152,7 @@ def plot_layers(img, paths):
     # Show layers
     plt.imshow(img, cmap='gray')
     plt.imshow(layers, cmap='gray', alpha=1)
+    plt.legend(handles=lines, loc='lower right')
     plt.show()
 
 

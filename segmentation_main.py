@@ -9,7 +9,7 @@
 # IS/OS 
 # RPE
 
-import cv2
+import cv2, json
 import numpy as np
 
 from getAdjacencyMatrix import get_adjacency_matrix, plot_layers
@@ -111,15 +111,29 @@ def get_retinal_layers(img):
     # Iterate through the list and save the found layer boundaries
     retinal_layers = []  
     for layer in retinal_layer_segmentation_order:
-        retinal_layers = get_retinal_layers_core(layer, img_new, params, retinal_layers,unflatten)
+        retinal_layers = get_retinal_layers_core(layer, img_new, params, retinal_layers, unflatten)
 
     ########################################################
 
     return retinal_layers, img_new
 
 
-##################### Example Code #########################
+def save_layers_to_file(layers, filename):
+    layers_as_json = "{\"img_name\" : \"" + img_name + "\", \"layers\": ["
+    for i, layer in enumerate(layers):
+        layers_as_json += layer.JSON()
+        if i < len(layers) - 1:
+            layers_as_json += (",")
+    layers_as_json += ("]}")
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(json.loads(layers_as_json), f, ensure_ascii=False, indent=4)
 
-img = cv2.imread('7F87A800.tif', 0)
+
+##################### Example Code #########################
+img_name = '7F87A800.tif'
+save_dir = ""
+
+img = cv2.imread(img_name, 0)
 imglayers, img_new = get_retinal_layers(img)
+save_layers_to_file(imglayers, str(img_name.split(".")[0]) + '.json')
 plot_layers(img, imglayers)
