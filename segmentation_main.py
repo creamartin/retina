@@ -17,6 +17,7 @@ from getRetinalLayersCore import get_retinal_layers_core
 from segmentation_helper import flatten
 
 
+# This Object contains all the neccessary parameters of the segmentation 
 class Params(object):
     def __init__(self):
         self.is_resize = 1.0
@@ -62,15 +63,25 @@ class Params(object):
             self.offsets = np.arange(-5, 6)
 
 
-params = Params()
-
 
 def get_retinal_layers(img):
+
+
+    # Parameter object:
+    params = Params()
+
+
     # get Image size
     sz_img = img.shape
 
+
+    # Pre-Processing ######################################
     # resize Image
     # img = cv2.resize(img, dsize=None, fx=1.0, fy=1.0, interpolation=cv2.INTER_AREA)
+
+    # flatten image 
+    img_f, unflatten = flatten(img)
+    print(unflatten[1])
 
     # smooth image 
     # 2 approaches:
@@ -78,11 +89,16 @@ def get_retinal_layers(img):
     ## Gaussian Blur
     # img = cv2.GaussianBlur(img,(3,3),0.8,0)
 
+<<<<<<< HEAD
     # flatten image 
     img_f, unflatten = flatten(img)
 
+=======
+>>>>>>> segmentation
     ## Median
     img = cv2.medianBlur(img, 3)
+
+    #######################################################
 
     # Create adjacency matrices 
     params.adjMatrixW, params.adjMatrixMW, params.adjMAsub, params.adjMBsub, params.adjMW, params.adjMmW, img_new = get_adjacency_matrix(
@@ -91,13 +107,19 @@ def get_retinal_layers(img):
     params.adjMatrixW_f, params.adjMatrixMW_f, params.adjMAsub_f, params.adjMBsub_f, params.adjMW_f, params.adjMmW_f, img_new_f = get_adjacency_matrix(
         img_f)
 
+        
+    # Main part ###########################################
+    # Iterate through a sorted list of layer names based on knowledge about the image struture  ###########################################
+    
     # Pre-set order 
     retinal_layer_segmentation_order = ['roughILMandISOS', 'ilm', 'isos', 'rpe', 'inlopl', 'nflgcl', 'iplinl', 'oplonl']
 
     # Iterate through the list and save the found layer boundaries
-    retinal_layers = []  # np.empty(7,dtype = object)
+    retinal_layers = []  
     for layer in retinal_layer_segmentation_order:
         retinal_layers = get_retinal_layers_core(layer, img_new, params, retinal_layers, unflatten)
+
+    ########################################################
 
     return retinal_layers, img_new
 
