@@ -81,7 +81,6 @@ def get_retinal_layers(img):
 
     # flatten image 
     img_f, unflatten = flatten(img)
-    print(unflatten[1])
 
     # smooth image 
     # 2 approaches:
@@ -89,12 +88,11 @@ def get_retinal_layers(img):
     ## Gaussian Blur
     # img = cv2.GaussianBlur(img,(3,3),0.8,0)
 
-<<<<<<< HEAD
+
     # flatten image 
     img_f, unflatten = flatten(img)
 
-=======
->>>>>>> segmentation
+
     ## Median
     img = cv2.medianBlur(img, 3)
 
@@ -136,7 +134,11 @@ def save_layers_to_file(layers, filename):
 
 
 ##################### Example Code #########################
-img_name = '7F87A800.tif'
+img_name = '7F87A800.tif' # multiple separate druses
+#img_name = '38B062A0.tif' # little vessels
+#img_name = '61D70FB0.tif' # multiple connected druses
+#img_name = '391C1CC0.tif' # large vessels
+#img_name = 'B5B3ADB0.tif' # bad quality recording
 save_dir = ""
 
 img = cv2.imread(img_name, 0)
