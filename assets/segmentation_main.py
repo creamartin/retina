@@ -133,9 +133,11 @@ img_name = '7F87A800.tif'  # multiple separate druses
 # img_name = '61D70FB0.tif' # multiple connected druses
 # img_name = '391C1CC0.tif' # large vessels
 # img_name = 'B5B3ADB0.tif' # bad quality recording
-save_dir = "assets/"
 
-img = cv2.imread("assets/" + img_name, 0)
+dir = "./assets/"
+
+
+img = cv2.imread(dir + img_name, 0)
 imglayers, img_new = get_retinal_layers(img)
-save_layers_to_file(imglayers, "assets/" + str(img_name.split(".")[0]) + '.json')
+save_layers_to_file(imglayers, dir + str(img_name.split(".")[0]) + '.json')
 plot_layers(img, imglayers)
