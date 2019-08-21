@@ -150,6 +150,8 @@ def getHyperReflectiveLayers(inputImg, param):
 
 # This function is used in get_retinal_layers
 def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
+
+
     if layer_name == 'roughILMandISOS':
 
         img_old = img[:, 1:-1]
@@ -160,6 +162,8 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
         return temp_paths
 
 
+
+    # General adjancency matrices 
     elif layer_name in ['nflgcl', 'inlopl', 'ilm', 'oplonl', 'iplinl']:
 
         adj_ma = params.adjMAsub
@@ -167,7 +171,8 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
         adj_MW = params.adjMW
         adj_MmW = params.adjMmW
 
-
+    
+    # adjancency matrices of the faltten image
     elif layer_name in ['isos','rpe']:
 
         adj_ma = params.adjMAsub_f
@@ -182,9 +187,7 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
     roi_img = np.zeros(sz_img)
 
 
-    # runs through the image with the added columns 
-    # Because of that one have to start in the second column and end befor the last column 
-    test = range(0, sz_img_org[1])
+    # runs through the new image with the added columns 
     for k in range(0, sz_img_org[1]):
 
         if layer_name == 'nflgcl':
@@ -254,7 +257,7 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
             ind_pathX = np.where(next((x for x in paths_list if x.name == 'ilm'), None).pathX == k)
             ind_pathX = np.reshape(ind_pathX, (1, ind_pathX[0].size))
 
-            start_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] + 40  + ((-1)*shift_array[k])
+            start_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] + 10  + ((-1)*shift_array[k])
             end_ind = img.shape[0] -1 
             #end_ind = next((x for x in paths_list if x.name == 'ilm'), None).pathY[ind_pathX[0, 0]] + params.is_os_1 + ((-1)shift_array[k])
 
@@ -288,6 +291,8 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
             start_ind = start_ind_0 + 3  # The matlab-code use an additional offset (params.oplonl_0/1)  -> able to add later on
             end_ind = end_ind_0 - 5
 
+
+
         # error checking
 
         if start_ind > end_ind:
@@ -301,16 +306,13 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
 
 
 
-            # set column_wise region of interest to 1
+        # set column_wise region of interest to 1
         roi_img[start_ind: end_ind, k+1] = 1
 
     # set first and last column to 1
     roi_img[:, 0] = 1
     roi_img[:, -1] = 1
 
-    #cv2.imshow('image',roi_img)
-    #cv2.waitKey(0)
-    #cv2.destroyAllWindows()
 
     # include only the region of interest in the adjacency matrix
     ind1, ind2 = np.nonzero(roi_img[:] == 1)
@@ -319,16 +321,18 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
 
     keep_ind = np.logical_and(include_a, include_b)
 
-    # Black to white or white to black adjacency
+    
 
-    # dark to white
+    ## Dark to Bright or bright to dark adjacency
+
+    # dark to bright
     if layer_name in ['inlopl', 'ilm', 'isos']:
 
         adjMatrixW = sparse_matrix(adj_MW[keep_ind], adj_ma[keep_ind], adj_mb[keep_ind], img)
         dist_matrix, predecessors = find_shortest_path(adjMatrixW)
         path = get_path(predecessors, len(dist_matrix) - 1)
 
-    # white to dark 
+    # bright to dark 
     elif layer_name in ['rpe', 'nflgcl', 'oplonl', 'iplinl']:
 
         adjMatrixMW = sparse_matrix(adj_MmW[keep_ind], adj_ma[keep_ind], adj_mb[keep_ind], img)
