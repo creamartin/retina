@@ -3,6 +3,7 @@ import numpy as np
 import segmentation_helper as sh
 from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path, get_path, sub2ind, ind2sub
 
+
 # path class
 class Path(object):
 
@@ -136,7 +137,7 @@ def getHyperReflectiveLayers(inputImg, param):
 
         count += 1
 
-    # format paths back to original size
+    # define the name of the detected layer boundary based on the mean y value. ILM lies always above IS-OS
 
     if paths[0].getPathYmean() > paths[1].getPathYmean():
         paths[0].name = 'isos'
@@ -290,7 +291,7 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
 
         # error checking
 
-        if start_ind > end_ind:
+        if start_ind >= end_ind:
             start_ind = end_ind - 1
 
         if start_ind < 0:
@@ -298,6 +299,8 @@ def get_retinal_layers_core(layer_name, img, params, paths_list, shift_array):
 
         if end_ind > sz_img[0] - 1:
             end_ind = sz_img[0] - 1
+        
+        
 
 
 
