@@ -9,12 +9,13 @@
 # IS/OS 
 # RPE
 
-import cv2, json
+import cv2
+import json
 import numpy as np
-
-from getAdjacencyMatrix import get_adjacency_matrix, plot_layers
 from getRetinalLayersCore import get_retinal_layers_core
 from segmentation_helper import flatten
+
+from assets.getAdjacencyMatrix import get_adjacency_matrix, plot_layers
 
 
 # This Object contains all the neccessary parameters of the segmentation 
@@ -63,17 +64,12 @@ class Params(object):
             self.offsets = np.arange(-5, 6)
 
 
-
 def get_retinal_layers(img):
-
-
     # Parameter object:
     params = Params()
 
-
     # get Image size
     sz_img = img.shape
-
 
     # Pre-Processing ######################################
     # resize Image
@@ -92,7 +88,6 @@ def get_retinal_layers(img):
     # flatten image 
     img_f, unflatten = flatten(img)
 
-
     ## Median
     img = cv2.medianBlur(img, 3)
 
@@ -105,15 +100,14 @@ def get_retinal_layers(img):
     params.adjMatrixW_f, params.adjMatrixMW_f, params.adjMAsub_f, params.adjMBsub_f, params.adjMW_f, params.adjMmW_f, img_new_f = get_adjacency_matrix(
         img_f)
 
-        
     # Main part ###########################################
     # Iterate through a sorted list of layer names based on knowledge about the image struture  ###########################################
-    
+
     # Pre-set order 
     retinal_layer_segmentation_order = ['roughILMandISOS', 'ilm', 'isos', 'rpe', 'inlopl', 'nflgcl', 'iplinl', 'oplonl']
 
     # Iterate through the list and save the found layer boundaries
-    retinal_layers = []  
+    retinal_layers = []
     for layer in retinal_layer_segmentation_order:
         retinal_layers = get_retinal_layers_core(layer, img_new, params, retinal_layers, unflatten)
 
@@ -134,14 +128,14 @@ def save_layers_to_file(layers, filename):
 
 
 ##################### Example Code #########################
-img_name = '7F87A800.tif' # multiple separate druses
-#img_name = '38B062A0.tif' # little vessels
-#img_name = '61D70FB0.tif' # multiple connected druses
-#img_name = '391C1CC0.tif' # large vessels
-#img_name = 'B5B3ADB0.tif' # bad quality recording
-save_dir = ""
+img_name = '7F87A800.tif'  # multiple separate druses
+# img_name = '38B062A0.tif' # little vessels
+# img_name = '61D70FB0.tif' # multiple connected druses
+# img_name = '391C1CC0.tif' # large vessels
+# img_name = 'B5B3ADB0.tif' # bad quality recording
+save_dir = "assets/"
 
-img = cv2.imread(img_name, 0)
+img = cv2.imread("assets/" + img_name, 0)
 imglayers, img_new = get_retinal_layers(img)
-save_layers_to_file(imglayers, str(img_name.split(".")[0]) + '.json')
+save_layers_to_file(imglayers, "assets/" + str(img_name.split(".")[0]) + '.json')
 plot_layers(img, imglayers)
