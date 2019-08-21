@@ -43,7 +43,7 @@ class Path(object):
         return self.pathYmean
 
     def JSON(self):
-        return "{\"name\": \"" + self.name + "\"," + "\"path_x\": " + json.dumps((self.pathY.tolist())) + "," + "\"path_y\": " + json.dumps((self.pathY.tolist())) + "}"
+        return "{\"name\": \"" + self.name + "\"," + "\"path_x\": " + json.dumps((self.pathX.tolist())) + "," + "\"path_y\": " + json.dumps((self.pathY.tolist())) + "}"
 
 
 def getHyperReflectiveLayers(inputImg, param):

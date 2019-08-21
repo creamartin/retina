@@ -80,7 +80,6 @@ def get_retinal_layers(img):
 
     # flatten image 
     img_f, unflatten = flatten(img)
-    print(unflatten[1])
 
     ## Median
     img = cv2.medianBlur(img, 3)
