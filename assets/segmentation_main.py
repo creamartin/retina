@@ -15,7 +15,7 @@ import numpy as np
 from getRetinalLayersCore import get_retinal_layers_core
 from segmentation_helper import flatten
 
-from assets.getAdjacencyMatrix import get_adjacency_matrix, plot_layers
+from getAdjacencyMatrix import get_adjacency_matrix, plot_layers
 
 
 # This Object contains all the neccessary parameters of the segmentation 
@@ -134,7 +134,7 @@ img_name = '7F87A800.tif'  # multiple separate druses
 # img_name = '391C1CC0.tif' # large vessels
 # img_name = 'B5B3ADB0.tif' # bad quality recording
 
-dir = "./assets/"
+dir = ""
 
 
 img = cv2.imread(dir + img_name, 0)
