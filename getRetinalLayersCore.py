@@ -1,4 +1,4 @@
-import cv2
+import cv2,json
 import numpy as np
 import segmentation_helper as sh
 from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path, get_path, sub2ind, ind2sub
@@ -41,6 +41,9 @@ class Path(object):
 
     def getPathYmean(self):
         return self.pathYmean
+
+    def JSON(self):
+        return "{\"name\": \"" + self.name + "\"," + "\"path_x\": " + json.dumps((self.pathY.tolist())) + "," + "\"path_y\": " + json.dumps((self.pathY.tolist())) + "}"
 
 
 def getHyperReflectiveLayers(inputImg, param):

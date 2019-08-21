@@ -117,7 +117,7 @@ def sparse_matrix (adjMW, adjMAsub, adjMBsub, img):
 # Apply Dijkstra algorith for finding the shortest path
 def find_shortest_path(adjMatrix):
     dist_matrix, predecessors = dijkstra(
-        csgraph=adjMatrix, indices=0, directed=True, return_predecessors=True, min_only=False)
+        csgraph=adjMatrix, indices=0, directed=True, return_predecessors=True)
     return dist_matrix, predecessors
 
 # Constructs path from predecessors
