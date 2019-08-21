@@ -1,12 +1,14 @@
-import numpy as np
-import cv2
-from scipy.sparse import dok_matrix
-from scipy.sparse.csgraph import dijkstra, shortest_path
-from matplotlib import pyplot as plt
 import itertools
 import time
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+from scipy.sparse import dok_matrix
+from scipy.sparse.csgraph import dijkstra
 from skimage.filters import threshold_otsu
-import segmentation_helper
+
+from assets import segmentation_helper
 
 
 #
@@ -168,20 +170,20 @@ first_layer = segmentation_helper.path_to_y_array(first_layer, width)
 #print(which_layer(crop, y_list))
 
 # find second layer
-masked = segmentation_helper.mask_image(gradient,first_layer,offset=20,above=True)
+masked = segmentation_helper.mask_image(gradient, first_layer, offset=20, above=True)
 second_layer = find_path(masked)
 second_layer = segmentation_helper.path_to_y_array(second_layer, width)
 
 #second layer bottom boundary
-negmasked = segmentation_helper.mask_image(gradient_negative,first_layer,offset=20,above=True)
+negmasked = segmentation_helper.mask_image(gradient_negative, first_layer, offset=20, above=True)
 bottom_boundary = find_path(negmasked)
 bottom_boundary = segmentation_helper.path_to_y_array(bottom_boundary, width)
 
 #unflatten all
-unflatten = segmentation_helper.shiftColumn(invert,img)
-first_layer = segmentation_helper.shiftColumn(invert,np.array(first_layer))
-second_layer = segmentation_helper.shiftColumn(invert,np.array(second_layer))
-bottom_boundary = segmentation_helper.shiftColumn(invert,np.array(bottom_boundary))
+unflatten = segmentation_helper.shiftColumn(invert, img)
+first_layer = segmentation_helper.shiftColumn(invert, np.array(first_layer))
+second_layer = segmentation_helper.shiftColumn(invert, np.array(second_layer))
+bottom_boundary = segmentation_helper.shiftColumn(invert, np.array(bottom_boundary))
 
 #draw path
 paths = np.zeros([img.shape[0], img.shape[1], 4], dtype=int)

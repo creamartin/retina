@@ -1,11 +1,10 @@
-import numpy as np
 import cv2
-import scipy as sc
+import numpy as np
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import dijkstra
-from matplotlib import pyplot as plt
-import time
-from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path,get_path, sub2ind,ind2sub, plot_layers
+
+from assets.getAdjacencyMatrix import get_adjacency_matrix, sub2ind, ind2sub, plot_layers
+
 
 class Path(object):
 

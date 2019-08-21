@@ -1,7 +1,7 @@
 import numpy as np
-import cv2
-from getAdjacencyMatrix import get_adjacency_matrix, sparse_matrix, find_shortest_path,get_path, sub2ind,ind2sub, plot_layers
-#import getRetinalLayers 
+
+
+#import getRetinalLayers
 
 class Rough_ilm_and_isos(object):
     

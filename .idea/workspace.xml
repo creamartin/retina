@@ -2,10 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f069d20e-fb07-4024-bb1b-972fac3aca8d" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/assets/README.md" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/7F87A800.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/AE59F6F0.tif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/segmentation/graph_segmentation.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/assets/segmentation/segmentation_helper.py" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/38B062A0.json" afterPath="$PROJECT_DIR$/assets/38B062A0.json" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/38B062A0.tif" afterPath="$PROJECT_DIR$/assets/38B062A0.tif" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/391C1CC0.json" afterPath="$PROJECT_DIR$/assets/391C1CC0.json" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/391C1CC0.tif" afterPath="$PROJECT_DIR$/assets/391C1CC0.tif" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/61D70FB0.json" afterPath="$PROJECT_DIR$/assets/61D70FB0.json" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/61D70FB0.tif" afterPath="$PROJECT_DIR$/assets/61D70FB0.tif" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/7F87A800.tif" afterPath="$PROJECT_DIR$/assets/7F87A800.tif" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/B5B3ADB0.json" afterPath="$PROJECT_DIR$/assets/B5B3ADB0.json" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/B5B3ADB0.tif" afterPath="$PROJECT_DIR$/assets/B5B3ADB0.tif" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/getAdjacencyMatrix.py" afterPath="$PROJECT_DIR$/assets/getAdjacencyMatrix.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/getRetinalLayersCore.py" afterPath="$PROJECT_DIR$/assets/getRetinalLayersCore.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/segmentation_helper.py" afterPath="$PROJECT_DIR$/assets/segmentation_helper.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/segmentation_main.py" afterPath="$PROJECT_DIR$/assets/segmentation_main.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/stat2.py" afterPath="$PROJECT_DIR$/assets/stat2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/segmentation_main.py" afterPath="$PROJECT_DIR$/segmentation_main.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/deprecated/getHyperReflectiveLayers.py" afterPath="$PROJECT_DIR$/assets/deprecated/getHyperReflectiveLayers.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/deprecated/getHyperReflectiveLayers_old.py" afterPath="$PROJECT_DIR$/assets/deprecated/getHyperReflectiveLayers_old.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/deprecated/graph_segmentation.py" afterPath="$PROJECT_DIR$/assets/deprecated/graph_segmentation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/assets/deprecated/graph_segmentation_2.py" afterPath="$PROJECT_DIR$/assets/deprecated/graph_segmentation_2.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,7 +35,18 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="segmentation_main.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/assets/segmentation_main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="263">
+              <caret line="128" column="0" lean-forward="true" selection-start-line="128" selection-start-column="0" selection-end-line="128" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -41,6 +72,8 @@
         <option value="$USER_HOME$/Desktop/segmentation_main.py" />
         <option value="$PROJECT_DIR$/getRetinalLayersCore.py" />
         <option value="$PROJECT_DIR$/segmentation_main.py" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/assets/segmentation_main.py" />
       </list>
     </option>
   </component>
@@ -88,6 +121,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$/assets/deprecated" />
     </key>
   </component>
@@ -116,7 +150,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="retina" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/getAdjacencyMatrix.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/assets/getAdjacencyMatrix.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -150,7 +184,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="retina" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/segmentation_main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/assets/segmentation_main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -167,7 +201,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="retina" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/segmentation_main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/assets/segmentation_main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -211,10 +245,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="877" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26037195" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32908162" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24872449" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24872449" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -229,6 +264,9 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.md" />
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
@@ -239,47 +277,39 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/segmentation_main.py">
+    <entry file="file://$PROJECT_DIR$/assets/segmentation_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#198#214#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/segmentation_main.py">
+    <entry file="file://$PROJECT_DIR$/assets/segmentation_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1110">
           <caret line="79" column="0" lean-forward="true" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-          <folding>
-            <element signature="e#198#214#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/segmentation_main.py">
+    <entry file="file://$PROJECT_DIR$/assets/segmentation_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="18" column="26" lean-forward="true" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
-          <folding>
-            <element signature="e#198#214#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/getRetinalLayersCore.py">
+    <entry file="file://$PROJECT_DIR$/assets/getRetinalLayersCore.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="945">
           <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/segmentation_helper.py">
+    <entry file="file://$PROJECT_DIR$/assets/segmentation_helper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-201">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -293,14 +323,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/segmentation/segmentation_helper.py">
+    <entry file="file://$PROJECT_DIR$/assets/deprecated/segmentation/segmentation_helper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3765">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/segmentation/graph_segmentation.py">
+    <entry file="file://$PROJECT_DIR$/assets/deprecated/segmentation/graph_segmentation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="164">
           <caret line="163" column="0" lean-forward="true" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
@@ -314,20 +344,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/getAdjacencyMatrix.py">
+    <entry file="file://$PROJECT_DIR$/assets/getAdjacencyMatrix.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="117" column="0" lean-forward="false" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#10#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/segmentation_main.py">
+    <entry file="file://$PROJECT_DIR$/assets/segmentation_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1485">
           <caret line="99" column="81" lean-forward="false" selection-start-line="99" selection-start-column="81" selection-end-line="99" selection-end-column="81" />
-          <folding>
-            <element signature="e#198#214#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -338,33 +369,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/getRetinalLayersCore.py">
+    <entry file="file://$PROJECT_DIR$/assets/getRetinalLayersCore.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="762">
           <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/segmentation_main.py">
+    <entry file="file://$PROJECT_DIR$/assets/segmentation_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="18" column="26" lean-forward="true" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
-          <folding>
-            <element signature="e#198#214#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/getRetinalLayersCore.py">
+    <entry file="file://$PROJECT_DIR$/assets/getRetinalLayersCore.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="945">
           <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -389,27 +414,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/segmentation/segmentation_helper.py">
+    <entry file="file://$PROJECT_DIR$/assets/deprecated/segmentation/segmentation_helper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-581">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/assets/segmentation/graph_segmentation.py">
+    <entry file="file://$PROJECT_DIR$/assets/deprecated/segmentation/graph_segmentation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="164">
           <caret line="163" column="0" lean-forward="true" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/segmentation_main.py">
+    <entry file="file://$PROJECT_DIR$/assets/segmentation_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="393">
           <caret line="73" column="5" lean-forward="false" selection-start-line="73" selection-start-column="5" selection-end-line="73" selection-end-column="5" />
-          <folding>
-            <element signature="e#198#214#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -420,17 +443,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/segmentation_helper.py">
+    <entry file="file://$PROJECT_DIR$/assets/segmentation_helper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="690">
           <caret line="188" column="0" lean-forward="true" selection-start-line="188" selection-start-column="0" selection-end-line="188" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/getAdjacencyMatrix.py">
+    <entry file="file://$PROJECT_DIR$/assets/getAdjacencyMatrix.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1785">
           <caret line="119" column="77" lean-forward="false" selection-start-line="119" selection-start-column="77" selection-end-line="119" selection-end-column="77" />
+          <folding>
+            <element signature="e#0#10#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -448,25 +474,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/7F87A800.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-23115">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/61D70FB0.tif">
+    <entry file="file://$PROJECT_DIR$/assets/61D70FB0.tif">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/391C1CC0.tif">
+    <entry file="file://$PROJECT_DIR$/assets/391C1CC0.tif">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/38B062A0.tif">
+    <entry file="file://$PROJECT_DIR$/assets/38B062A0.tif">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
@@ -476,29 +494,41 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/segmentation_main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2040">
-          <caret line="136" column="0" lean-forward="false" selection-start-line="136" selection-start-column="0" selection-end-line="136" selection-end-column="0" />
-          <folding>
-            <element signature="e#198#214#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/getRetinalLayersCore.py">
+    <entry file="file://$PROJECT_DIR$/assets/getRetinalLayersCore.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="349" column="0" lean-forward="false" selection-start-line="349" selection-start-column="0" selection-end-line="349" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/B5B3ADB0.tif">
+    <entry file="file://$PROJECT_DIR$/assets/B5B3ADB0.tif">
       <provider selected="true" editor-type-id="images">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/7F87A800.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-18294">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/assets/segmentation_main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="128" column="0" lean-forward="true" selection-start-line="128" selection-start-column="0" selection-end-line="128" selection-end-column="0" />
+          <folding />
+        </state>
       </provider>
     </entry>
   </component>

@@ -1,11 +1,13 @@
-import numpy as np
-import cv2
-from scipy.sparse import dok_matrix
-from scipy.sparse.csgraph import dijkstra, shortest_path
-from matplotlib import pyplot as plt
 import itertools
 import time
-import segmentation_helper
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+from scipy.sparse import dok_matrix
+from scipy.sparse.csgraph import dijkstra
+
+from assets import segmentation_helper
 
 
 #
