@@ -134,7 +134,7 @@ img_name = '7F87A800.tif'  # multiple separate druses
 # img_name = '391C1CC0.tif' # large vessels
 # img_name = 'B5B3ADB0.tif' # bad quality recording
 
-dir = "./assets/"
+dir = ""
 
 
 img = cv2.imread(img_name, 0)
